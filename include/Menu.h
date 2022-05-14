@@ -1,5 +1,5 @@
-#ifndef DA_PROJ1_FEUP_MENU_H
-#define DA_PROJ1_FEUP_MENU_H
+#ifndef DA_PROJ2_FEUP_MENU_H
+#define DA_PROJ2_FEUP_MENU_H
 
 #include <string>
 #include "App.h"
@@ -75,4 +75,4 @@ public:
     Menu *nextMenu() override;
 };
 
-#endif //DA_PROJ1_FEUP_MENU_H
+#endif //DA_PROJ2_FEUP_MENU_H

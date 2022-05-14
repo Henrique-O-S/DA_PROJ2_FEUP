@@ -90,7 +90,7 @@ Scenery1::Scenery1(App &app) : Menu(app) {
 void Scenery1::display() {
     cout << endl;
     cout << "Options Menu:" << endl;
-    cout << "1 - Option 1" << endl;
+    cout << "1 - Non separable groups" << endl;
     cout << "2 - Print Vehicles" << endl;
     cout << "3 - Sort Vehicles (to origin)" << endl;
     cout << "0 - Exit" << endl;
@@ -100,7 +100,7 @@ void Scenery1::display() {
 Menu *Scenery1::nextMenu() {
     switch (readInt()) {
         case 1: {
-            return this;
+            return new Func1(app);
         }
         case 2: {
             app.printVehicles();
@@ -114,6 +114,63 @@ Menu *Scenery1::nextMenu() {
         default: return invalidInput();
     }
 }
+
+Func1::Func1(App &app) : Menu(app) {
+
+}
+
+void Func1::display() {
+    cout << endl;
+    cout << "==============================="<<endl;
+    cout << "Q - Exit" << endl << endl;
+    cout << "Input:\n<Origin> <Destination>";
+}
+
+bool isNumber(const string& str) {
+    if(str.empty()) return false;
+    for (char const &c : str) {
+        if (std::isdigit(c) == 0) return false;
+    }
+    return true;
+}
+
+
+
+Menu *Func1::nextMenu() {
+    stringstream so(readStr());
+    string origin, destination;
+    so >> origin;
+    if(origin.find('q') != string::npos || origin.find('Q') != string::npos)
+        return nullptr;
+    so >> destination;
+    if(!isNumber(origin) || !isNumber(destination))
+        return invalidInput();
+
+    int ori, dest;
+    ori = stoi(origin);
+    dest = stoi(destination);
+    if(ori == dest) {
+        cout << "Origin and Destination point are the same:"<<ori << "=" << dest << endl;
+        return invalidInput();
+    }
+
+    auto ret = app.scenery1(ori, dest);
+    cout << endl<<"(";
+    int size = 1;
+    for(auto r : ret) {
+        cout << r;
+        if(size == ret.size()) break;
+        cout << ",";
+        size++;
+    }
+    cout << ")" << endl;
+
+    waitForKey();
+
+    return new Scenery1(app);
+}
+
+
 
 Scenery2::Scenery2(App &app) : Menu(app) {
 

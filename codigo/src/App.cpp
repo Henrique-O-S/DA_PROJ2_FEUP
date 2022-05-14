@@ -7,7 +7,7 @@
 App::App() = default;
 
 void App::loadData(){
-    auto ret = fileReader.getVehicleFromFiles(filepath + "in01.txt");
+    auto ret = fileReader.getVehicleFromFiles(filepath + "smallTest.txt");
     if(ret.second == -1) {
         cout << "Loading data failed";
         return;
@@ -42,6 +42,11 @@ void App::sortVehicles(int sort_algorithm) {
         default:
             break;
     }
+}
+
+vector<int> App::scenery1(int origin, int destination) {
+    vector<int> ret = {origin,destination};
+    return ret;
 }
 
 //Scenery 1

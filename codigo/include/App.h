@@ -37,6 +37,12 @@ public:
      * @param sort_algorithm defines sorting algorithm
      */
     void sortVehicles(int sort_algorithm);
+
+    /**
+     * @brief TBD
+     * @return TBD
+     */
+    vector<int> scenery1(int origin, int destination);
 };
 
 #endif //DA_PROJ2_FEUP_APP_H

@@ -42,7 +42,8 @@ bool fileExists(string f_name) {
 
 pair<vector<Vehicle> *, int> FileReader::getVehicleFromFiles(string f1) {
     auto * vehicles = new vector<Vehicle>;
-    if(!fileExists(f1)) return make_pair(nullptr, -1);
+    if(!fileExists(f1))
+        ;
     auto input = fileReader(f1);
 
     stringstream so(input.second);

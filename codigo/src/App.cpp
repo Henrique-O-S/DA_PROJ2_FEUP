@@ -44,12 +44,11 @@ void App::sortVehicles(int sort_algorithm) {
     }
 }
 
+//Scenery 1
+
 vector<int> App::scenery1(int origin, int destination) {
     vector<int> ret = {origin,destination};
     return ret;
 }
-
-//Scenery 1
-
 
 //Scenery 2

@@ -3,6 +3,8 @@
 
 
 #include <string>
+#include "Vehicle.h"
+#include "FileReader.h"
 
 /**
  * @brief Contains the main functionalities of the program
@@ -10,7 +12,9 @@
 
 class App {
 private:
-    std::string filepath = "../dataFiles/";
+    string filepath = "../input/";
+    FileReader fileReader;
+    vector<Vehicle> vehicles;
 public:
 
     /**
@@ -22,6 +26,11 @@ public:
      * @brief Loads all storage files data into the program
      */
     void loadData();
+
+    /**
+     * @brief Prints to the console the vector of Vehicles
+     */
+    void printVehicles();
 
 };
 

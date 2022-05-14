@@ -100,6 +100,7 @@ void Scenery1::display() {
 Menu *Scenery1::nextMenu() {
     switch (readInt()) {
         case 1: {
+            app.printVehicles();
             return this;
         }
         case 2: {

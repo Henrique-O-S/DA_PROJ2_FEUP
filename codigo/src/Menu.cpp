@@ -91,7 +91,7 @@ void Scenery1::display() {
     cout << endl;
     cout << "Options Menu:" << endl;
     cout << "1 - Option 1" << endl;
-    cout << "2 - Option 2" << endl;
+    cout << "2 - Print Vehicles" << endl;
     cout << "3 - Option 3" << endl;
     cout << "0 - Exit" << endl;
     cout << endl;
@@ -100,10 +100,10 @@ void Scenery1::display() {
 Menu *Scenery1::nextMenu() {
     switch (readInt()) {
         case 1: {
-            app.printVehicles();
             return this;
         }
         case 2: {
+            app.printVehicles();
             return this;
         }
         case 3: {

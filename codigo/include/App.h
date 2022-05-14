@@ -32,6 +32,11 @@ public:
      */
     void printVehicles();
 
+    /**
+     * @brief Sorts the Vehicles according to a certain algorithm
+     * @param sort_algorithm defines sorting algorithm
+     */
+    void sortVehicles(int sort_algorithm);
 };
 
 #endif //DA_PROJ2_FEUP_APP_H

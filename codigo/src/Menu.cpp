@@ -92,7 +92,7 @@ void Scenery1::display() {
     cout << "Options Menu:" << endl;
     cout << "1 - Option 1" << endl;
     cout << "2 - Print Vehicles" << endl;
-    cout << "3 - Option 3" << endl;
+    cout << "3 - Sort Vehicles (to origin)" << endl;
     cout << "0 - Exit" << endl;
     cout << endl;
 }
@@ -107,6 +107,7 @@ Menu *Scenery1::nextMenu() {
             return this;
         }
         case 3: {
+            app.sortVehicles(1);
             return this;
         }
         case 0: return nullptr;

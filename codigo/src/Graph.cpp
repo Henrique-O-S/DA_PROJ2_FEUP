@@ -52,18 +52,19 @@ ostream &operator<<(ostream &os, const Graph &g) {
 }
 
 /// TODO Make this func also consider duration sum
-int Graph::tripCapacity(vector<int> path) {
+pair<int, int> Graph::tripCapacity(vector<int> path) {
     int capacity = INT_MAX/2;
-
+    int size = 0;
     vector<int>::iterator i, j;
     for (i = path.begin(), j = path.begin()+1; j != path.end(); j++, i++) {
         for(auto itr : nodes[*i].adj) {
             if(itr.dest == *j) {
+                size++;
                 if(itr.capacity < capacity)
                     capacity = itr.capacity;
             }
         }
     }
 
-    return capacity;
+    return make_pair(capacity, size);
 }

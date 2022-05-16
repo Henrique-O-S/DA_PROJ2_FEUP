@@ -17,6 +17,7 @@ private:
     FileReader fileReader;
     vector<Vehicle> vehicles;
     Graph graph = Graph(true);
+    vector<pair<vector<int>, int>> pathsTaken;
 
 public:
 
@@ -34,6 +35,11 @@ public:
      * @brief Prints to the console the Nodes plus Edges contained in graph
      */
     void printGraph();
+
+    /**
+     * @brief Prints to the console the Paths taken
+     */
+    void printPaths();
 
     /**
      * @brief Maximizes capacity of group trip from Origin to Destination

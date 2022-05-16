@@ -75,6 +75,13 @@ public:
     Menu *nextMenu() override;
 };
 
+class Func2: public Menu{
+public:
+    explicit Func2(App &app);
+    void display() override;
+    Menu *nextMenu() override;
+};
+
 class Scenery2: public Menu{
 public:
     explicit Scenery2(App &app);

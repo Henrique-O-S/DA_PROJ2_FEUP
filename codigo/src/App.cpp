@@ -6,7 +6,7 @@
 App::App() = default;
 
 void App::loadData(){
-    auto ret = fileReader.getVehicleFromFiles(filepath + "in10.txt");
+    auto ret = fileReader.getVehicleFromFiles(filepath + "in01.txt");
     if(ret.second == -1) {
         cout << "Loading data failed";
         return;
@@ -24,6 +24,20 @@ void App::printGraph() {
         return;
     }
     cout << graph;
+}
+
+void App::printPaths() {
+    for(const auto& path : pathsTaken) {
+        cout << "Capacity: "<< path.second << " Path size: " << path.first.size()<<" Path: (";
+        int size = 1;
+        for(auto v : path.first) {
+            cout << v;
+            if(size == path.first.size()) break;
+            cout << ",";
+            size++;
+        }
+        cout << ")" << endl;
+    }
 }
 
 //Scenery 1
@@ -108,13 +122,20 @@ pair<vector<int>, int> App::scenery1_1(int origin, int destination) {
 // path[] stores actual vertices and path_index is current
 // index in path[]
 void printAllPathsUtil(vector<vector<int>> &paths, vector<Node> nodes, int u, int d, bool visited[],
-                              int path[], int& path_index)
+                              int path[], int& path_index, int max_size)
 {
     // Mark the current node and store it in path[]
     visited[u] = true;
     path[path_index] = u;
     path_index++;
-    // If current vertex is same as destination, then print
+
+    if(path_index > max_size) {
+        path_index--;
+        visited[u] = false;
+        return;
+    }
+
+    // If current vertex is same as destination, then save
     // current path[]
     if (u == d) {
         vector<int> aux;
@@ -122,14 +143,19 @@ void printAllPathsUtil(vector<vector<int>> &paths, vector<Node> nodes, int u, in
         for (int i = 0; i < path_index; i++) {
             aux.push_back(path[i]);
         }
-        paths.push_back(aux);
+        if(paths.empty()) {
+            paths.push_back(aux);
+        }
+        if(aux == paths.back())
+            ;
+        else paths.push_back(aux);
     }
     else // If current vertex is not destination
     {
         // Recur for all the vertices adjacent to current vertex
         for (auto vertex : nodes[u].adj)
             if (!visited[vertex.dest]) {
-                printAllPathsUtil(paths, nodes, vertex.dest, d, visited, path, path_index);
+                printAllPathsUtil(paths, nodes, vertex.dest, d, visited, path, path_index, max_size);
             }
     }
 
@@ -139,7 +165,7 @@ void printAllPathsUtil(vector<vector<int>> &paths, vector<Node> nodes, int u, in
 }
 
 // Prints all paths from 's' to 'd'
-void printAllPaths(vector<vector<int>> &paths, vector<Node> nodes, int s, int d)
+void printAllPaths(vector<vector<int>> &paths, const vector<Node>& nodes, int s, int d, int max_size)
 {
     int V = nodes.size();
     // Mark all the vertices as not visited
@@ -154,21 +180,119 @@ void printAllPaths(vector<vector<int>> &paths, vector<Node> nodes, int s, int d)
         visited[i] = false;
 
     // Call the recursive helper function to print all paths
-    printAllPathsUtil(paths, nodes, s, d, visited, path, path_index);
+    printAllPathsUtil(paths, nodes, s, d, visited, path, path_index, max_size);
 }
+
+
+///////////////////////////////////////////
+
+
+// utility function for printing
+// the found path in graph
+void printpath(vector<int>& path)
+{
+    int size = path.size();
+    for (int i = 0; i < size; i++)
+        cout << path[i] << " ";
+    cout << endl;
+}
+
+// utility function to check if current
+// vertex is already present in path
+int isNotVisited(int x, vector<int>& path)
+{
+    int size = path.size();
+    for (int i = 0; i < size; i++)
+        if (path[i] == x)
+            return 0;
+    return 1;
+}
+
+// utility function for finding paths in graph
+// from source to destination
+void findpaths(vector<Node> nodes, int src,
+               int dst, int v)
+{
+    // create a queue which stores
+    // the paths
+    queue<vector<int> > q;
+
+    // path vector to store the current path
+    vector<int> path;
+    path.push_back(src);
+    q.push(path);
+    while (!q.empty()) {
+        path = q.front();
+        q.pop();
+        int last = path[path.size() - 1];
+
+        // if last vertex is the desired destination
+        // then print the path
+        if (last == dst)
+            printpath(path);
+
+        // traverse to all the nodes connected to
+        // current vertex and push new path to queue
+        for (auto vertex : nodes[last].adj) {
+            if (isNotVisited(vertex.dest, path)) {
+                vector<int> newpath(path);
+                newpath.push_back(vertex.dest);
+                q.push(newpath);
+            }
+        }
+    }
+}
+
+
 
 
 /// 1.2 DONE HERE
 /// TODO Make this func clear reps of same capacity and transbordos
 vector<pair<vector<int>, int>> App::scenery1_2(int origin, int destination) {
     vector<vector<int>> paths;
-    printAllPaths(paths, graph.getNodes(), origin, destination);
     vector<pair<vector<int>, int>> ret;
-    for(const auto& path : paths) {
-        int capacity = graph.tripCapacity(path);
-        ret.emplace_back(path, capacity);
+
+    auto aux = widest_path_problem(graph.getNodes(), origin, destination);
+    if(aux.second == INT_MIN/2) {
+        cout << "FAILED"<< endl;
+        return ret;
     }
+    printAllPaths(paths, graph.getNodes(), origin, destination, aux.first.size());
+
+    vector<int> capacityVec;
+    for(const auto& path : paths) { // for each obtained path
+        bool add = false;
+        auto capacity = graph.tripCapacity(path);
+        bool notInCapacityVec = true;
+        for(auto c : capacityVec) { // checks diff capacities
+            if(capacity.first == c) { // path capacity == existing capacity?
+                notInCapacityVec = false;
+                int i = 0;
+                for(auto r : ret) {
+                    if(r.second == capacity.first) {
+                        cout << "Path capacity:"<<r.second << "--" << capacity.first;
+                        cout << " Path size:"<<r.first.size() << "--" << capacity.second << endl;
+                        if(r.first.size() > capacity.second) { // compares length from ret
+                            add = true;
+                            ret.erase(ret.begin() + i);
+                            break;
+                        }
+                    }
+                    i++;
+                }
+                break;
+            }
+        }
+        if(notInCapacityVec)  {
+            capacityVec.push_back(capacity.first); // push back non-existing capacity
+            ret.emplace_back(path, capacity.first);
+            continue;
+        }
+        if(add) ret.emplace_back(path, capacity.first);
+    }
+    pathsTaken = ret;
     return ret;
 }
+
 
 //Scenery 2

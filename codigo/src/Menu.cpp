@@ -93,6 +93,7 @@ void Scenery1::display() {
     cout << "1 - Non separable groups" << endl;
     cout << "2 - 1.2 func" << endl;
     cout << "3 - Print Vehicles" << endl;
+    cout << "4 - Print Path" << endl;
     cout << "0 - Exit" << endl;
     cout << endl;
 }
@@ -103,21 +104,14 @@ Menu *Scenery1::nextMenu() {
             return new Func1(app);
         }
         case 2: {
-            int o = 1, d = 4;
-
-            auto ret = app.scenery1_2(o, d);
-
-            for(auto path : ret) {
-                cout << "Capacity: "<< path.second <<" Path: ";
-                for(auto v : path.first) {
-                    cout << v << "-";
-                }
-                cout << endl;
-            }
-            return this;
+            return new Func2(app);
         }
         case 3: {
             app.printGraph();
+            return this;
+        }
+        case 4: {
+            app.printPaths();
             return this;
         }
         case 0: return nullptr;
@@ -180,6 +174,53 @@ Menu *Func1::nextMenu() {
         size++;
     }
     cout << ")" << endl;
+
+    return new Scenery1(app);
+}
+
+Func2::Func2(App &app) : Menu(app) {
+
+}
+
+void Func2::display() {
+    cout << endl;
+    cout << "==============================="<<endl;
+    cout << "Q - Exit" << endl << endl;
+    cout << "Input:\n<Origin> <Destination>";
+}
+
+
+Menu *Func2::nextMenu() {
+    stringstream so(readStr());
+    string origin, destination;
+    so >> origin;
+    if(origin.find('q') != string::npos || origin.find('Q') != string::npos)
+        return nullptr;
+    so >> destination;
+    if(!isNumber(origin) || !isNumber(destination))
+        return invalidInput();
+
+    int ori, dest;
+    ori = stoi(origin);
+    dest = stoi(destination);
+    if(ori == dest) {
+        cout << "Origin and Destination point are the same:"<<ori << "=" << dest << endl;
+        return this;
+    }
+
+    auto ret = app.scenery1_2(ori, dest);
+    if(ret.empty()) {
+        cout << "There is no possible path from '"<<ori << "' to '" << dest << "'!"<<endl;
+        return this;
+    }
+
+    for(const auto& path : ret) {
+        cout << "Capacity: "<< path.second << " Path size: " << path.first.size()<<" Path: ";
+        for(auto v : path.first) {
+            cout << v << "-";
+        }
+        cout << endl;
+    }
 
     return new Scenery1(app);
 }

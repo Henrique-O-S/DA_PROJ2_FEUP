@@ -6,7 +6,7 @@
 App::App() = default;
 
 void App::loadData(){
-    auto ret = fileReader.getVehicleFromFiles(filepath + "smallTest.txt");
+    auto ret = fileReader.getVehicleFromFiles(filepath + "in10.txt");
     if(ret.second == -1) {
         cout << "Loading data failed";
         return;
@@ -29,6 +29,8 @@ void App::printGraph() {
 //Scenery 1
 
 /********************* 1.1 DONE HERE *********************/
+
+/// TODO probably change graph to a hashmap, time is gonna hurt bad
 
 // Function to return the maximum weight
 // in the widest path of the given graph
@@ -112,7 +114,6 @@ void printAllPathsUtil(vector<vector<int>> &paths, vector<Node> nodes, int u, in
     visited[u] = true;
     path[path_index] = u;
     path_index++;
-    //cout << u << " "<< d << endl;
     // If current vertex is same as destination, then print
     // current path[]
     if (u == d) {

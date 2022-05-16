@@ -92,7 +92,6 @@ void Scenery1::display() {
     cout << "Options Menu:" << endl;
     cout << "1 - Non separable groups" << endl;
     cout << "2 - Print Vehicles" << endl;
-    cout << "3 - Sort Vehicles (to origin)" << endl;
     cout << "0 - Exit" << endl;
     cout << endl;
 }
@@ -103,11 +102,7 @@ Menu *Scenery1::nextMenu() {
             return new Func1(app);
         }
         case 2: {
-            app.printVehicles();
-            return this;
-        }
-        case 3: {
-            app.sortVehicles(1);
+            app.printGraph();
             return this;
         }
         case 0: return nullptr;
@@ -151,21 +146,25 @@ Menu *Func1::nextMenu() {
     dest = stoi(destination);
     if(ori == dest) {
         cout << "Origin and Destination point are the same:"<<ori << "=" << dest << endl;
-        return invalidInput();
+        return this;
     }
 
     auto ret = app.scenery1(ori, dest);
-    cout << endl<<"(";
+    if(ret.first.empty()) {
+        cout << "There is no possible path from '"<<ori << "' to '" << dest << "'!"<<endl;
+        return this;
+    }
+    cout << "The capacity of the group is: " << ret.second << endl;
+    cout << "The desired path to follow is: ";
+    cout <<"(";
     int size = 1;
-    for(auto r : ret) {
+    for(auto r : ret.first) {
         cout << r;
-        if(size == ret.size()) break;
+        if(size == ret.first.size()) break;
         cout << ",";
         size++;
     }
     cout << ")" << endl;
-
-    waitForKey();
 
     return new Scenery1(app);
 }

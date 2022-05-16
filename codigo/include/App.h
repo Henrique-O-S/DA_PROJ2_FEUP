@@ -31,21 +31,15 @@ public:
     void loadData();
 
     /**
-     * @brief Prints to the console the vector of Vehicles
+     * @brief Prints to the console the Nodes plus Edges contained in graph
      */
-    void printVehicles();
-
-    /**
-     * @brief Sorts the Vehicles according to a certain algorithm
-     * @param sort_algorithm defines sorting algorithm
-     */
-    void sortVehicles(int sort_algorithm);
+    void printGraph();
 
     /**
      * @brief TBD
      * @return TBD
      */
-    vector<int> scenery1(int origin, int destination);
+    pair<vector<int>, int> scenery1(int origin, int destination);
 };
 
 #endif //DA_PROJ2_FEUP_APP_H

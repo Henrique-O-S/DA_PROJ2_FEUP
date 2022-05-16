@@ -2,7 +2,7 @@
 #define DA_PROJ2_FEUP_STRUCTS_H
 
 #include <string>
-#include <list>
+#include <vector>
 
 struct Edge {
     int origin;
@@ -14,7 +14,7 @@ struct Edge {
 
 struct Node {
     /** The list of outgoing edges (to adjacent nodes) */
-    std::list<Edge> adj;
+    std::vector<Edge> adj;
     int id;
 };
 

@@ -6,7 +6,7 @@
 App::App() = default;
 
 void App::loadData(){
-    auto ret = fileReader.getVehicleFromFiles(filepath + "in01.txt");
+    auto ret = fileReader.getVehicleFromFiles(filepath + "in03.txt");
     if(ret.second == -1) {
         cout << "Loading data failed";
         return;
@@ -16,6 +16,18 @@ void App::loadData(){
 
     for(const Vehicle& vehicle : *ret.first)
         graph.addEdge(vehicle.getOrigin(), vehicle.getDestination(), vehicle.getCapacity(),vehicle.getDuration());
+}
+
+void App::sortPaths() {
+    sort(pathsTaken.begin(), pathsTaken.end(), [](pair<vector<int>, int>&i1, pair<vector<int>, int>&i2){
+        if(i1.second != i2.second) {
+            return i1.second < i2.second;
+        }
+        int weight_v1 = i1.first.size(), weight_v2 = i2.first.size();
+
+
+        return weight_v1 < weight_v2;
+    });
 }
 
 void App::printGraph() {
@@ -249,6 +261,7 @@ void findpaths(vector<Node> nodes, int src,
 /// 1.2 DONE HERE
 /// TODO Make this func clear reps of same capacity and transbordos
 vector<pair<vector<int>, int>> App::scenery1_2(int origin, int destination) {
+    pathsTaken.clear();
     vector<vector<int>> paths;
     vector<pair<vector<int>, int>> ret;
 
@@ -258,6 +271,12 @@ vector<pair<vector<int>, int>> App::scenery1_2(int origin, int destination) {
         return ret;
     }
     printAllPaths(paths, graph.getNodes(), origin, destination, aux.first.size());
+
+    /* // TO PRINT EVERYTHING
+    for(const auto& path : paths) {
+        auto capacity = graph.tripCapacity(path);
+        ret.emplace_back(path, capacity.first);
+    } */
 
     vector<int> capacityVec;
     for(const auto& path : paths) { // for each obtained path
@@ -270,8 +289,6 @@ vector<pair<vector<int>, int>> App::scenery1_2(int origin, int destination) {
                 int i = 0;
                 for(auto r : ret) {
                     if(r.second == capacity.first) {
-                        cout << "Path capacity:"<<r.second << "--" << capacity.first;
-                        cout << " Path size:"<<r.first.size() << "--" << capacity.second << endl;
                         if(r.first.size() > capacity.second) { // compares length from ret
                             add = true;
                             ret.erase(ret.begin() + i);
@@ -291,6 +308,7 @@ vector<pair<vector<int>, int>> App::scenery1_2(int origin, int destination) {
         if(add) ret.emplace_back(path, capacity.first);
     }
     pathsTaken = ret;
+    sortPaths();
     return ret;
 }
 

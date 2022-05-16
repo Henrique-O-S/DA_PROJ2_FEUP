@@ -213,15 +213,8 @@ Menu *Func2::nextMenu() {
         cout << "There is no possible path from '"<<ori << "' to '" << dest << "'!"<<endl;
         return this;
     }
-
-    for(const auto& path : ret) {
-        cout << "Capacity: "<< path.second << " Path size: " << path.first.size()<<" Path: ";
-        for(auto v : path.first) {
-            cout << v << "-";
-        }
-        cout << endl;
-    }
-
+    cout << endl;
+    app.printPaths();
     return new Scenery1(app);
 }
 

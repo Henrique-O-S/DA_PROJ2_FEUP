@@ -42,6 +42,11 @@ public:
     void printPaths();
 
     /**
+     * @brief Sorts the Paths vector
+     */
+    void sortPaths();
+
+    /**
      * @brief Maximizes capacity of group trip from Origin to Destination
      * @param origin Origin point
      * @param destination Destination Point

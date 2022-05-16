@@ -91,7 +91,8 @@ void Scenery1::display() {
     cout << endl;
     cout << "Options Menu:" << endl;
     cout << "1 - Non separable groups" << endl;
-    cout << "2 - Print Vehicles" << endl;
+    cout << "2 - 1.2 func" << endl;
+    cout << "3 - Print Vehicles" << endl;
     cout << "0 - Exit" << endl;
     cout << endl;
 }
@@ -102,6 +103,20 @@ Menu *Scenery1::nextMenu() {
             return new Func1(app);
         }
         case 2: {
+            int o = 1, d = 4;
+
+            auto ret = app.scenery1_2(o, d);
+
+            for(auto path : ret) {
+                cout << "Capacity: "<< path.second <<" Path: ";
+                for(auto v : path.first) {
+                    cout << v << "-";
+                }
+                cout << endl;
+            }
+            return this;
+        }
+        case 3: {
             app.printGraph();
             return this;
         }
@@ -149,7 +164,7 @@ Menu *Func1::nextMenu() {
         return this;
     }
 
-    auto ret = app.scenery1(ori, dest);
+    auto ret = app.scenery1_1(ori, dest);
     if(ret.first.empty()) {
         cout << "There is no possible path from '"<<ori << "' to '" << dest << "'!"<<endl;
         return this;

@@ -6,7 +6,7 @@
 App::App() = default;
 
 void App::loadData(){
-    auto ret = fileReader.getVehicleFromFiles(filepath + "in01.txt");
+    auto ret = fileReader.getVehicleFromFiles(filepath + "smallTest.txt");
     if(ret.second == -1) {
         cout << "Loading data failed";
         return;
@@ -27,6 +27,8 @@ void App::printGraph() {
 }
 
 //Scenery 1
+
+/********************* 1.1 DONE HERE *********************/
 
 // Function to return the maximum weight
 // in the widest path of the given graph
@@ -89,13 +91,83 @@ pair<vector<int>, int> widest_path_problem(vector<Node> nodes, int src, int targ
     return make_pair(ret, widest[target]);
 }
 
-/// 1.1 DONE HERE
-pair<vector<int>, int> App::scenery1(int origin, int destination) {
+pair<vector<int>, int> App::scenery1_1(int origin, int destination) {
     pair<vector<int>, int> ret;
     if(origin == 0 || destination == 0) return ret;
     auto aux = widest_path_problem(graph.getNodes(), origin, destination);
     if(aux.second == INT_MIN/2) return ret;
     return aux;
+}
+
+/********************* 1.2 DONE HERE *********************/
+
+// A recursive function to print all paths from 'u' to 'd'.
+// visited[] keeps track of vertices in current path.
+// path[] stores actual vertices and path_index is current
+// index in path[]
+void printAllPathsUtil(vector<vector<int>> &paths, vector<Node> nodes, int u, int d, bool visited[],
+                              int path[], int& path_index)
+{
+    // Mark the current node and store it in path[]
+    visited[u] = true;
+    path[path_index] = u;
+    path_index++;
+    //cout << u << " "<< d << endl;
+    // If current vertex is same as destination, then print
+    // current path[]
+    if (u == d) {
+        vector<int> aux;
+        aux.reserve(path_index);
+        for (int i = 0; i < path_index; i++) {
+            aux.push_back(path[i]);
+        }
+        paths.push_back(aux);
+    }
+    else // If current vertex is not destination
+    {
+        // Recur for all the vertices adjacent to current vertex
+        for (auto vertex : nodes[u].adj)
+            if (!visited[vertex.dest]) {
+                printAllPathsUtil(paths, nodes, vertex.dest, d, visited, path, path_index);
+            }
+    }
+
+    // Remove current vertex from path[] and mark it as unvisited
+    path_index--;
+    visited[u] = false;
+}
+
+// Prints all paths from 's' to 'd'
+void printAllPaths(vector<vector<int>> &paths, vector<Node> nodes, int s, int d)
+{
+    int V = nodes.size();
+    // Mark all the vertices as not visited
+    bool* visited = new bool[V];
+
+    // Create an array to store paths
+    int* path = new int[V];
+    int path_index = 0; // Initialize path[] as empty
+
+    // Initialize all vertices as not visited
+    for (int i = 0; i < V; i++)
+        visited[i] = false;
+
+    // Call the recursive helper function to print all paths
+    printAllPathsUtil(paths, nodes, s, d, visited, path, path_index);
+}
+
+
+/// 1.2 DONE HERE
+/// TODO Make this func clear reps of same capacity and transbordos
+vector<pair<vector<int>, int>> App::scenery1_2(int origin, int destination) {
+    vector<vector<int>> paths;
+    printAllPaths(paths, graph.getNodes(), origin, destination);
+    vector<pair<vector<int>, int>> ret;
+    for(const auto& path : paths) {
+        int capacity = graph.tripCapacity(path);
+        ret.emplace_back(path, capacity);
+    }
+    return ret;
 }
 
 //Scenery 2

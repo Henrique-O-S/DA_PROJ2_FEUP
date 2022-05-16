@@ -36,10 +36,20 @@ public:
     void printGraph();
 
     /**
+     * @brief Maximizes capacity of group trip from Origin to Destination
+     * @param origin Origin point
+     * @param destination Destination Point
+     * @return vector containing the path and a integer referring to the capacity of the group
+     */
+    pair<vector<int>, int> scenery1_1(int origin, int destination);
+
+    /**
      * @brief TBD
+     * @param origin Origin point
+     * @param destination Destination Point
      * @return TBD
      */
-    pair<vector<int>, int> scenery1(int origin, int destination);
+    vector<pair<vector<int>, int>> scenery1_2(int origin, int destination);
 };
 
 #endif //DA_PROJ2_FEUP_APP_H

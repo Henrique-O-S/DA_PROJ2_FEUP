@@ -12,19 +12,20 @@ void App::loadData(){
         cout << "Loading data failed";
         return;
     }
-    for(Vehicle vehicle : *ret.first){
-        vehicles.push_back(vehicle);
-    }
+    for(int i = 1; i <= ret.second; i++)
+        graph.addNode(i);
+
+    for(const Vehicle& vehicle : *ret.first)
+        graph.addEdge(vehicle.getOrigin(), vehicle.getDestination(), vehicle.getCapacity(),vehicle.getDuration());
 }
 
 void App::printVehicles() {
-    if(vehicles.empty()) {
+    if(graph.getNodes().empty()) {
         cout << "No vehicles available"<<endl;
         return;
     }
-    for(const auto& line : vehicles) {
-        cout << line;
-    }
+    int first = 0;
+    cout << graph;
 }
 
 void App::sortVehicles(int sort_algorithm) {

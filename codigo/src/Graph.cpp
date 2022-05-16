@@ -11,12 +11,16 @@ vector<Node> &Graph::getNodes() {
     return nodes;
 }
 
-int Graph::addNode(const Node &node) {
+int Graph::addNode(int node) {
     int index = (int)nodes.size();
     for (int i=1; i <= n; i++)
-        if(nodes[i].id==node.id)
+        if(nodes[i].id==node)
             return i;
-    nodes.push_back(node);
+
+    Node _node = Node();
+    _node.id = node;
+
+    nodes.push_back(_node);
     n++;
     return index;
 }
@@ -28,6 +32,21 @@ void Graph::removeNode(int node) {
 
 void Graph::addEdge(int origin, int dest, int capacity, int duration) {
     if (origin<1 || origin>n || dest<1 || dest>n) return;
-    nodes[origin].adj.push_back({dest, capacity, duration});
-    if (!hasDir) nodes[dest].adj.push_back({origin, capacity, duration});
+    nodes[origin].adj.push_back({origin, dest, capacity, duration});
+    if (!hasDir) nodes[dest].adj.push_back({dest, origin, capacity, duration});
+}
+
+ostream &operator<<(ostream &os, const Graph &g) {
+    auto s = g.nodes;
+    bool first = true;
+    for(const auto& o : s) {
+        if(first) {
+            first = false;
+            continue;
+        }
+        os << "ID: " << o.id << "\n"<< "Edges: \n";
+        for(auto l : o.adj)
+            os <<" Trip: " << l.origin << "-" << l.dest<< " C: " << l.capacity << " Dur: " << l.duration <<"H" << endl;
+    }
+    return os;
 }

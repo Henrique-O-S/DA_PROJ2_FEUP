@@ -6,6 +6,10 @@
 #include <vector>
 #include <list>
 #include <climits>
+#include <iosfwd>
+#include <iostream>
+using namespace std;
+
 
 #define INF (INT_MAX/2)
 
@@ -14,7 +18,7 @@ class Graph {
 protected:
     int n=0;
     bool hasDir=true;
-    std::vector<Node> nodes={{}};
+    vector<Node> nodes = {{}};
 
 public:
     /**
@@ -27,13 +31,13 @@ public:
      * Gets a reference to get nodes vector of the graph
      * @return node vector passed by reference
      */
-    std::vector<Node> &getNodes();
+    vector<Node> &getNodes();
     /**
      * Adds a node to the graph
-     * @param node Node struct information
+     * @param node Node index
      * @return index of the position where the node was added in the nodes vector
      */
-    int addNode(const Node& node);
+    int addNode(int node);
     /**
      * Removes the node correspondent to the integer node identifier passed in the argument
      * @param node integer node identifier in the nodes vector
@@ -47,6 +51,13 @@ public:
      * @param duration time it takes to get from origin to destination
      */
     void addEdge(int origin, int dest, int capacity, int duration);
+    /**
+     * Operator to print Courier object in the correct format
+     * @param os stream where Courier will be printed
+     * @param p Courier object passed by reference
+     * @return ostream with Courier printed
+     */
+    friend std::ostream& operator<<(std::ostream& os, const Graph &o);
 };
 
 #endif //DA_PROJ2_FEUP_GRAPH_H

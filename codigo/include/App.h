@@ -5,6 +5,7 @@
 #include <string>
 #include "Vehicle.h"
 #include "FileReader.h"
+#include "Graph.h"
 
 /**
  * @brief Contains the main functionalities of the program
@@ -15,6 +16,8 @@ private:
     string filepath = "../input/";
     FileReader fileReader;
     vector<Vehicle> vehicles;
+    Graph graph = Graph(true);
+
 public:
 
     /**

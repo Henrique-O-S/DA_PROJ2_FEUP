@@ -5,8 +5,8 @@
 
 App::App() = default;
 
-void App::loadData(){
-    auto ret = fileReader.getVehicleFromFiles(filepath + "in03.txt");
+void App::loadData(){ ///TODO assert max that origin is > 0 and end is < n
+    auto ret = fileReader.getVehicleFromFiles(filepath + "in01.txt");
     if(ret.second == -1) {
         cout << "Loading data failed";
         return;
@@ -52,6 +52,28 @@ void App::printPaths() {
     }
 }
 
+void App::otimalPaths() {
+    reverse(pathsTaken.begin(), pathsTaken.end());
+    int max_c = pathsTaken[0].second+1, min_path = pathsTaken[0].first.size();
+    int i = 0;
+
+    for(auto path : pathsTaken) {
+        if(i == 0);
+        else if(path.second < max_c) {
+            max_c = path.second;
+            if(path.first.size() >= min_path -1) {
+                pathsTaken.erase(pathsTaken.begin()+ i);
+                continue;
+            }
+            else {
+                min_path = path.first.size();
+            }
+        }
+        i++;
+    }
+    reverse(pathsTaken.begin(), pathsTaken.end());
+}
+
 //Scenery 1
 
 /********************* 1.1 DONE HERE *********************/
@@ -64,6 +86,8 @@ pair<vector<int>, int> widest_path_problem(vector<Node> nodes, int src, int targ
 {
     // To keep track of widest distance
     vector<int> widest(nodes.size(), INT_MIN/2);
+    vector<int> slimmest(nodes.size(), INT_MAX/2);
+
 
     // To get the path at the end of the algorithm
     vector<int> parent(nodes.size(), 0);
@@ -75,7 +99,8 @@ pair<vector<int>, int> widest_path_problem(vector<Node> nodes, int src, int targ
 
     container.push(make_pair(0, src));
 
-    widest[src] = INT_MAX;
+    widest[src] = INT_MAX/2;
+    slimmest[src] = INT_MIN/2;
 
     while (container.empty() == false) {
         pair<int, int> temp = container.top();
@@ -83,6 +108,7 @@ pair<vector<int>, int> widest_path_problem(vector<Node> nodes, int src, int targ
         int current_src = temp.second;
 
         container.pop();
+        int i = 0;
 
         for (auto vertex : nodes[current_src].adj) {
 
@@ -92,11 +118,16 @@ pair<vector<int>, int> widest_path_problem(vector<Node> nodes, int src, int targ
             int distance = max(widest[vertex.dest],
                                min(widest[current_src], vertex.capacity));
 
-            // Relaxation of edge and adding into Priority Queue
-            if (distance > widest[vertex.dest]) {
+            int length = min(slimmest[vertex.dest],
+                               max(slimmest[current_src], i));
 
+            // Relaxation of edge and adding into Priority Queue
+            if (distance > widest[vertex.dest] || length < slimmest[vertex.dest]) {
+                i++;
                 // Updating bottle-neck distance
                 widest[vertex.dest] = distance;
+                slimmest[vertex.dest] = length;
+
 
                 // To keep track of parent
                 parent[vertex.dest] = current_src;
@@ -137,6 +168,7 @@ void printAllPathsUtil(vector<vector<int>> &paths, vector<Node> nodes, int u, in
                               int path[], int& path_index, int max_size)
 {
     // Mark the current node and store it in path[]
+    if(visited[u]) return;
     visited[u] = true;
     path[path_index] = u;
     path_index++;
@@ -150,6 +182,14 @@ void printAllPathsUtil(vector<vector<int>> &paths, vector<Node> nodes, int u, in
     // If current vertex is same as destination, then save
     // current path[]
     if (u == d) {
+
+        if(paths.empty());
+        /* else if(path_index > paths.end()->size()) {
+            path_index--;
+            visited[u] = false;
+            return;
+        } */
+
         vector<int> aux;
         aux.reserve(path_index);
         for (int i = 0; i < path_index; i++) {
@@ -158,9 +198,10 @@ void printAllPathsUtil(vector<vector<int>> &paths, vector<Node> nodes, int u, in
         if(paths.empty()) {
             paths.push_back(aux);
         }
-        if(aux == paths.back())
+        else if(aux == paths.back())
             ;
         else paths.push_back(aux);
+
     }
     else // If current vertex is not destination
     {
@@ -260,23 +301,30 @@ void findpaths(vector<Node> nodes, int src,
 
 /// 1.2 DONE HERE
 /// TODO Make this func clear reps of same capacity and transbordos
+/// TODO clear up the function to not go over PATH SIZE *********************
 vector<pair<vector<int>, int>> App::scenery1_2(int origin, int destination) {
     pathsTaken.clear();
     vector<vector<int>> paths;
     vector<pair<vector<int>, int>> ret;
-
+    if(origin <= 0 || origin > graph.getNodes().size() ||destination <= 0 || destination > graph.getNodes().size()) {
+        return ret;
+    }
     auto aux = widest_path_problem(graph.getNodes(), origin, destination);
     if(aux.second == INT_MIN/2) {
         cout << "FAILED"<< endl;
         return ret;
     }
-    printAllPaths(paths, graph.getNodes(), origin, destination, aux.first.size());
+    printAllPaths(paths, graph.getNodes(), origin, destination, aux.first.size() - 1);
+
+    paths.emplace_back(aux.first);
+
 
     /* // TO PRINT EVERYTHING
     for(const auto& path : paths) {
         auto capacity = graph.tripCapacity(path);
         ret.emplace_back(path, capacity.first);
-    } */
+    }
+    */
 
     vector<int> capacityVec;
     for(const auto& path : paths) { // for each obtained path
@@ -307,10 +355,14 @@ vector<pair<vector<int>, int>> App::scenery1_2(int origin, int destination) {
         }
         if(add) ret.emplace_back(path, capacity.first);
     }
+
     pathsTaken = ret;
     sortPaths();
+    otimalPaths();
     return ret;
 }
+
+
 
 
 //Scenery 2

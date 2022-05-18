@@ -47,6 +47,11 @@ public:
     void sortPaths();
 
     /**
+     * @brief Remove non Pareto optimal paths
+     */
+    void otimalPaths();
+
+    /**
      * @brief Maximizes capacity of group trip from Origin to Destination
      * @param origin Origin point
      * @param destination Destination Point

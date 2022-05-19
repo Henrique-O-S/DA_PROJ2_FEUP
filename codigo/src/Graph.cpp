@@ -33,7 +33,7 @@ void Graph::removeNode(int node) {
 void Graph::addEdge(int origin, int dest, int capacity, int duration) {
     if (origin<1 || origin>n || dest<1 || dest>n) return;
     nodes[origin].adj.push_back({origin, dest, capacity, duration});
-    if (!hasDir) nodes[dest].adj.push_back({dest, origin, capacity, duration});
+    nodes[dest].adjBack.push_back({dest, origin, capacity, duration});
 }
 
 ostream &operator<<(ostream &os, const Graph &g) {

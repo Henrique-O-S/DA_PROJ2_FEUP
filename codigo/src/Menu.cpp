@@ -164,7 +164,7 @@ Menu *Func1::nextMenu() {
         return this;
     }
     cout << "The capacity of the group is: " << ret.second << endl;
-    cout << "The desired path to follow is: ";
+    cout << "The desired path to follow of size " << ret.first.size()<<" is: ";
     cout <<"(";
     int size = 1;
     for(auto r : ret.first) {

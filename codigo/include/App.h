@@ -66,6 +66,15 @@ public:
      * @return TBD
      */
     vector<pair<vector<int>, int>> scenery1_2(int origin, int destination);
+
+    /**
+     * @brief Maximizes capacity of group trip from Origin to Destination
+     * @param origin Origin point
+     * @param destination Destination Point
+     * @param groupSize Total number of passengers
+     * @return vector containing the path
+     */
+    vector<int> scenery2_1(int origin, int destination, int groupSize);
 };
 
 #endif //DA_PROJ2_FEUP_APP_H

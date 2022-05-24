@@ -432,3 +432,59 @@ vector<pair<vector<int>, int>> App::scenery1_2(int origin, int destination) {
 
 
 //Scenery 2
+
+/********************* 2.1 DONE HERE *********************/
+
+
+
+/// 2.1 DONE HERE
+//Wrongly done!!! Only works for graphs were all nodes are someway connected and doesn't have loops
+vector<int> App::scenery2_1(int origin, int destination, int groupSize) {
+    vector<int> finalPath = vector<int> {origin}; //final path
+    vector<int> currentStops = vector<int> {origin}; //stops being used
+    vector<int> groups = vector<int> {groupSize}; // number of passengers in respective stop
+    while(!(currentStops[0] == destination && currentStops.size() != 1)){ //while all passengers don't reach destination do:
+        for(auto it = currentStops.begin(); it != currentStops.end(); it++) { //for each being used stop do:
+            int auxSize = groupSize; //aux to save groupSize
+            if((*it) != 0) { //can't remember the utility of this condition, but it was useful when i made it
+                int position = -1; // position in the vector groups correspondent to current stop
+                for (Node node: graph.getNodes()) { //all stop existing do:
+                    if (node.id == (*it)) { //if node matches current stop do:
+                        position++; //increase position to match current stop position
+                        //vector<Edge> paths = node.adj;
+                        vector<int> possibleStops; //vector of candidates to path
+                        bool moreThanOne = true; // checks if more than one paths are needed to accomodate all passengers
+                        for (Edge path: node.adj) { //for each path coming from current stop
+                            if(path.capacity > groups[position]){ //if path can take all passengers do:
+                                currentStops.erase(it); //erase currentStop from stops being used
+                                it--; //set iterator back
+                                currentStops.push_back(path.dest); //add new stop
+                                finalPath.push_back(path.dest);
+                                moreThanOne = false; //only one is needed
+                                break;
+                            }
+                            else{
+                                auxSize =- path.capacity; //number of passengers still missing transportation
+                                possibleStops.push_back(path.dest); //add stop to candidates
+                            }
+                            if (auxSize <= 0) { // if everyone has transportation do:
+                                break;
+                            }
+                        }
+                        if(moreThanOne){ //if more than one stop is needed do:
+                            if(auxSize > 0){ //if there is people missing transportation do:
+                                return {}; //TODO: exception signing the trip is not possible for that many people
+                            }
+                            for(int stop : possibleStops){ //for each stop in candidates
+                                currentStops.push_back(stop); //add candidate stop
+                                finalPath.push_back(stop);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return finalPath;
+}

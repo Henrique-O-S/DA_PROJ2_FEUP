@@ -210,7 +210,7 @@ Menu *Func2::nextMenu() {
 
     auto ret = app.scenery1_2(ori, dest);
     if(ret.empty()) {
-        cout << "There is no possible path from '"<<ori << "' to '" << dest << "'!"<<endl;
+        cout << "There are no possible paths from '"<<ori << "' to '" << dest << "'!"<<endl;
         return this;
     }
     cout << endl;
@@ -227,9 +227,9 @@ Scenery2::Scenery2(App &app) : Menu(app) {
 void Scenery2::display() {
     cout << endl;
     cout << "Options Menu:" << endl;
-    cout << "1 - Option 1" << endl;
-    cout << "2 - Option 2" << endl;
-    cout << "3 - Option 3" << endl;
+    cout << "1 - Option 2.1" << endl;
+    cout << "2 - Option 2.2" << endl;
+    cout << "3 - Option 2.3" << endl;
     cout << "0 - Exit" << endl;
     cout << endl;
 }
@@ -238,7 +238,7 @@ Menu *Scenery2::nextMenu() {
     switch (readInt()) {
         case 1: {
 
-            return this;
+            return new Func2_1(app);
         }
         case 2: {
 
@@ -246,9 +246,105 @@ Menu *Scenery2::nextMenu() {
         }
         case 3: {
 
-            return this;
+            return new Func2_3(app);
         }
         case 0: return nullptr;
         default: return invalidInput();
     }
+}
+
+Func2_1::Func2_1(App &app) : Menu(app) {
+
+}
+
+void Func2_1::display() {
+    cout << endl;
+    cout << "==============================="<<endl;
+    cout << "Q - Exit" << endl << endl;
+    cout << "Input:\n<Origin> <Destination> <Capacity>";
+}
+
+
+Menu *Func2_1::nextMenu() {
+    stringstream so(readStr());
+    string origin, destination, capacity;
+    so >> origin;
+    if(origin.find('q') != string::npos || origin.find('Q') != string::npos)
+        return nullptr;
+    so >> destination;
+    so >> capacity;
+    if(!isNumber(origin) || !isNumber(destination) || !isNumber(capacity))
+        return invalidInput();
+    int ori, dest, cpcity;
+    ori = stoi(origin);
+    dest = stoi(destination);
+    cpcity = stoi(capacity);
+    if(ori == dest) {
+        cout << "Origin and Destination point are the same:"<<ori << "=" << dest << endl;
+        return this;
+    }
+    if(cpcity <= 0) {
+        cout << "Insert a capacity above 0."<< endl;
+        return this;
+    }
+
+    auto ret = app.scenery2_1(ori, dest, cpcity);
+    if(ret.empty()) {
+        ;
+    }
+    cout << endl;
+    return new Scenery2(app);
+}
+
+Func2_2::Func2_2(App &app) : Menu(app) {
+
+}
+
+void Func2_2::display() {
+    cout << endl;
+    cout << "==============================="<<endl;
+    cout << "Q - Exit" << endl << endl;
+    cout << "Input:\n<Origin> <Destination>";
+}
+
+Menu *Func2_2::nextMenu() {
+    return new Scenery2(app);
+}
+
+Func2_3::Func2_3(App &app) : Menu(app) {
+
+}
+
+void Func2_3::display() {
+    cout << endl;
+    cout << "==============================="<<endl;
+    cout << "Q - Exit" << endl << endl;
+    cout << "Input:\n<Origin> <Destination>";
+}
+
+
+Menu *Func2_3::nextMenu() {
+    stringstream so(readStr());
+    string origin, destination;
+    so >> origin;
+    if(origin.find('q') != string::npos || origin.find('Q') != string::npos)
+        return nullptr;
+    so >> destination;
+    if(!isNumber(origin) || !isNumber(destination))
+        return invalidInput();
+
+    int ori, dest;
+    ori = stoi(origin);
+    dest = stoi(destination);
+    if(ori == dest) {
+        cout << "Origin and Destination point are the same:"<<ori << "=" << dest << endl;
+        return this;
+    }
+
+    auto ret = app.scenery2_3(ori, dest);
+    if(ret.empty()) {
+        ;
+    }
+    cout << endl;
+    return new Scenery2(app);
 }

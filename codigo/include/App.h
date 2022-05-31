@@ -66,6 +66,23 @@ public:
      * @return TBD
      */
     vector<pair<vector<int>, int>> scenery1_2(int origin, int destination);
+
+    /**
+     * @brief TBD
+     * @param origin Origin point
+     * @param destination Destination Point
+     * @param size Amount of people taking the trip
+     * @return TBD
+     */
+    vector<pair<vector<int>, int>> scenery2_1(int origin, int destination, int size);
+
+    /**
+     * @brief TBD
+     * @param origin Origin point
+     * @param destination Destination Point
+     * @return TBD
+     */
+    vector<pair<vector<int>, int>> scenery2_3(int origin, int destination);
 };
 
 #endif //DA_PROJ2_FEUP_APP_H

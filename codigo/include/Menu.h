@@ -89,4 +89,25 @@ public:
     Menu *nextMenu() override;
 };
 
+class Func2_1: public Menu{
+public:
+    explicit Func2_1(App &app);
+    void display() override;
+    Menu *nextMenu() override;
+};
+
+class Func2_2: public Menu{
+public:
+    explicit Func2_2(App &app);
+    void display() override;
+    Menu *nextMenu() override;
+};
+
+class Func2_3: public Menu{
+public:
+    explicit Func2_3(App &app);
+    void display() override;
+    Menu *nextMenu() override;
+};
+
 #endif //DA_PROJ2_FEUP_MENU_H

@@ -99,7 +99,7 @@ pair<vector<int>, int> widest_path_problem(vector<Node> nodes, int src, int targ
 
     widest[src] = INT_MAX/2;
 
-    while (container.empty() == false) {
+    while (!container.empty()) {
         pair<int, int> temp = container.top();
 
         int current_src = temp.second;
@@ -112,11 +112,12 @@ pair<vector<int>, int> widest_path_problem(vector<Node> nodes, int src, int targ
             // using current_source vertex's widest distance
             // and its widest distance so far
             int distance = max(widest[vertex.dest],
-                               min(widest[current_src], vertex.capacity));
+                               min(widest[vertex.origin], vertex.capacity));
             /// TODO for first iteration, save max "i" obtained, then try to find lower values with the remaining arestas
 
             // Relaxation of edge and adding into Priority Queue
             if (distance > widest[vertex.dest]) {
+                cout << distance << " " << vertex.dest << endl;
                 // Updating bottle-neck distance
                 widest[vertex.dest] = distance;
 
@@ -218,7 +219,7 @@ pair<vector<int>, int> findShortestPath(vector<Node> nodes,int src, int dest)
 pair<vector<int>, int> App::scenery1_1(int origin, int destination) {
     pair<vector<int>, int> ret;
     if(origin == 0 || destination == 0) return ret;
-    auto au = findShortestPath(graph.getNodes(), origin, destination);
+    //auto au = findShortestPath(graph.getNodes(), origin, destination);
     auto aux = widest_path_problem(graph.getNodes(), origin, destination);
     if(aux.second == INT_MIN/2) return ret;
     return aux;
@@ -272,9 +273,9 @@ void printAllPathsUtil(vector<vector<int>> &paths, vector<Node> nodes, int u, in
     else // If current vertex is not destination
     {
         // Recur for all the vertices adjacent to current vertex
-        for (auto vertex : nodes[u].adj)
-            if (!visited[vertex.dest]) {
-                printAllPathsUtil(paths, nodes, vertex.dest, d, visited, path, path_index, max_size);
+        for (auto edge : nodes[u].adj)
+            if (!visited[edge.dest]) {
+                printAllPathsUtil(paths, nodes, edge.dest, d, visited, path, path_index, max_size);
             }
     }
 
@@ -362,9 +363,6 @@ void findpaths(vector<Node> nodes, int src,
     }
 }
 
-
-
-
 /// 1.2 DONE HERE
 /// TODO Make this func clear reps of same capacity and transbordos
 /// TODO clear up the function to not go over PATH SIZE *********************
@@ -419,16 +417,228 @@ vector<pair<vector<int>, int>> App::scenery1_2(int origin, int destination) {
             ret.emplace_back(path, capacity.first);
             continue;
         }
-        if(add) ret.emplace_back(path, capacity.first);
+        if(add) ;
+            ret.emplace_back(path, capacity.first);
     }
 
     pathsTaken = ret;
     sortPaths();
-    otimalPaths();
+    //otimalPaths();
     return ret;
 }
 
-
-
-
 //Scenery 2
+/// 2.1 DONE HERE
+bool bfs(vector<vector<int>> rGraph, int s, int t, int parent[], int V)
+{
+    // Create a visited array and mark all vertices as not
+    // visited
+    bool visited[V];
+    memset(visited, 0, sizeof(visited));
+
+    // Create a queue, enqueue source vertex and mark source
+    // vertex as visited
+    queue<int> q;
+    q.push(s);
+    visited[s] = true;
+    parent[s] = -1;
+
+    // Standard BFS Loop
+    while (!q.empty()) {
+        int u = q.front();
+        q.pop();
+
+        for (int v = 0; v < V; v++) {
+            if (visited[v] == false && rGraph[u][v] > 0) {
+                // If we find a connection to the sink node,
+                // then there is no point in BFS anymore We
+                // just have to set its parent and can return
+                // true
+                if (v == t) {
+                    parent[v] = u;
+                    return true;
+                }
+                q.push(v);
+                parent[v] = u;
+                visited[v] = true;
+            }
+        }
+    }
+
+    // We didn't reach sink in BFS starting from source, so
+    // return false
+    return false;
+}
+int fordFulkerson2_1(vector<Node> nodes, int s, int t, int size)
+{
+    int u, v, V = nodes.size();
+
+    // Create a residual graph and fill the residual graph
+    // with given capacities in the original graph as
+    // residual capacities in residual graph
+    //int rGraph[V][V]; // Residual graph where rGraph[i][j]
+    vector<vector<int>> rGraph, rGraph2;
+    // indicates residual capacity of edge
+    // from i to j (if there is an edge. If
+    // rGraph[i][j] is 0, then there is not)
+
+    for (u = 0; u < V; u++) {
+        vector<int> vec;
+        for (v = 0; v < V; v++){
+            bool breaker = false;
+            for(auto itr : nodes[u].adj) {
+                if(itr.dest == v) {
+                    if(breaker) {
+                        vec.back() +=itr.capacity;
+                        continue;
+                    }
+                    else {
+                        vec.push_back(itr.capacity);
+                        breaker = true;
+                    }
+                }
+            }
+            if(!breaker) vec.push_back(0);
+        }
+        rGraph.push_back(vec);
+    }
+    rGraph2 = rGraph;
+    int parent[V]; // This array is filled by BFS and to
+    // store path
+
+    int max_flow = 0; // There is no flow initially
+    vector<tuple<int, int, int>> ret;
+
+    // Augment the flow while there is path from source to
+    // sink
+    while (bfs(rGraph, s, t, parent, V)) {
+        // Find minimum residual capacity of the edges along
+        // the path filled by BFS. Or we can say find the
+        // maximum flow through the path found.
+        int path_flow = INT_MAX;
+        for (v = t; v != s; v = parent[v]) {
+            u = parent[v];
+            path_flow = min(path_flow, rGraph[u][v]);
+        }
+
+        // update residual capacities of the edges and
+        // reverse edges along the path
+        for (v = t; v != s; v = parent[v]) {
+            u = parent[v];
+            rGraph[u][v] -= path_flow;
+            rGraph[v][u] += path_flow;
+        }
+
+        // Add path flow to overall flow
+        max_flow += path_flow;
+        if(max_flow >= size) break;
+    }
+    for (u = 0; u < V; u++) {
+        for (v = 0; v < V; v++) {
+            if(rGraph2[u][v] == 0) continue;
+            if(rGraph2[u][v] == rGraph[u][v]) continue;
+            ret.emplace_back(u, v, rGraph2[u][v] - rGraph[u][v]);
+        }
+    }
+    for(auto i:ret){
+        cout << get<0>(i) << " " << get<1>(i) << " " << get<2>(i) << " " << endl;
+    }
+    // Return the overall flow
+    return max_flow;
+}
+
+vector<pair<vector<int>, int>> App::scenery2_1(int origin, int destination, int size){
+    vector<pair<vector<int>, int>> ret;
+    cout << "The maximum possible flow is "
+         << fordFulkerson2_1(graph.getNodes(), origin, destination, size) << endl;
+
+    return ret;
+}
+
+/// 2.3 DONE HERE
+
+// Returns the maximum flow from s to t in the given graph
+int fordFulkerson2_3(vector<Node> nodes, int s, int t)
+{
+    int u, v, V = nodes.size();
+
+    // Create a residual graph and fill the residual graph
+    // with given capacities in the original graph as
+    // residual capacities in residual graph
+    //int rGraph[V][V]; // Residual graph where rGraph[i][j]
+    vector<vector<int>> rGraph, rGraph2;
+    // indicates residual capacity of edge
+    // from i to j (if there is an edge. If
+    // rGraph[i][j] is 0, then there is not)
+
+    for (u = 0; u < V; u++) {
+        vector<int> vec;
+        for (v = 0; v < V; v++){
+            bool breaker = false;
+            for(auto itr : nodes[u].adj) {
+                if(itr.dest == v) {
+                    if(breaker) {
+                        vec.back() +=itr.capacity;
+                        continue;
+                    }
+                    else {
+                        vec.push_back(itr.capacity);
+                        breaker = true;
+                    }
+                }
+            }
+            if(!breaker) vec.push_back(0);
+        }
+        rGraph.push_back(vec);
+    }
+    rGraph2 = rGraph;
+    int parent[V]; // This array is filled by BFS and to
+    // store path
+
+    int max_flow = 0; // There is no flow initially
+    vector<tuple<int, int, int>> ret;
+
+    // Augment the flow while there is path from source to
+    // sink
+    while (bfs(rGraph, s, t, parent, V)) {
+        // Find minimum residual capacity of the edges along
+        // the path filled by BFS. Or we can say find the
+        // maximum flow through the path found.
+        int path_flow = INT_MAX;
+        for (v = t; v != s; v = parent[v]) {
+            u = parent[v];
+            path_flow = min(path_flow, rGraph[u][v]);
+        }
+
+        // update residual capacities of the edges and
+        // reverse edges along the path
+        for (v = t; v != s; v = parent[v]) {
+            u = parent[v];
+            rGraph[u][v] -= path_flow;
+            rGraph[v][u] += path_flow;
+        }
+
+        // Add path flow to overall flow
+        max_flow += path_flow;
+    }
+    for (u = 0; u < V; u++) {
+        for (v = 0; v < V; v++) {
+            if(rGraph2[u][v] == 0) continue;
+            if(rGraph2[u][v] == rGraph[u][v]) continue;
+            ret.emplace_back(u, v, rGraph2[u][v] - rGraph[u][v]);
+        }
+    }
+    /* for(auto i:ret){
+        cout << get<0>(i) << " " << get<1>(i) << " " << get<2>(i) << " " << endl;
+    } */
+    // Return the overall flow
+    return max_flow;
+}
+
+vector<pair<vector<int>, int>> App::scenery2_3(int origin, int destination) {
+    vector<pair<vector<int>, int>> ret;
+    cout << "The maximum possible flow is "
+         << fordFulkerson2_3(graph.getNodes(), origin, destination) << endl;
+
+    return ret;
+}

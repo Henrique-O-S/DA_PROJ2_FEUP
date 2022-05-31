@@ -83,6 +83,7 @@ public:
      * @return TBD
      */
     vector<pair<vector<int>, int>> scenery2_3(int origin, int destination);
+
 };
 
 #endif //DA_PROJ2_FEUP_APP_H

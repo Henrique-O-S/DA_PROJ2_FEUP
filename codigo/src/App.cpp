@@ -520,7 +520,6 @@ int fordFulkerson2_1(vector<Node> nodes, int s, int t, int size)
             u = parent[v];
             path_flow = min(path_flow, rGraph[u][v]);
         }
-
         // update residual capacities of the edges and
         // reverse edges along the path
         for (v = t; v != s; v = parent[v]) {

@@ -80,6 +80,15 @@ public:
      * @brief TBD
      * @param origin Origin point
      * @param destination Destination Point
+     * @param size Amount of people taking the trip
+     * @return TBD
+     */
+    vector<pair<vector<int>, int>> scenery2_2(int origin, int destination, int augmentation);
+
+    /**
+     * @brief TBD
+     * @param origin Origin point
+     * @param destination Destination Point
      * @return TBD
      */
     vector<pair<vector<int>, int>> scenery2_3(int origin, int destination);

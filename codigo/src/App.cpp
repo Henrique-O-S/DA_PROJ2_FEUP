@@ -469,7 +469,7 @@ bool bfs(vector<vector<int>> rGraph, int s, int t, int parent[], int V)
     // return false
     return false;
 }
-int fordFulkerson2_1(vector<Node> nodes, int s, int t, int size)
+pair<vector<tuple<int, int, int>>, int>  fordFulkerson2_1(vector<Node> nodes, int s, int t, int size)
 {
     int u, v, V = nodes.size();
 
@@ -543,13 +543,66 @@ int fordFulkerson2_1(vector<Node> nodes, int s, int t, int size)
         cout << get<0>(i) << " " << get<1>(i) << " " << get<2>(i) << " " << endl;
     }
     // Return the overall flow
-    return max_flow;
+    return make_pair(ret, max_flow);
 }
 
 vector<pair<vector<int>, int>> App::scenery2_1(int origin, int destination, int size){
     vector<pair<vector<int>, int>> ret;
-    cout << "The maximum possible flow is "
-         << fordFulkerson2_1(graph.getNodes(), origin, destination, size) << endl;
+    pair<vector<vector<int>>, int> a;
+    auto aux = fordFulkerson2_1(graph.getNodes(), origin, destination, size);
+    a.second = aux.second;
+    /// TODO verificar todos os caminhos possiveis e construir a partir daí
+    map<int, bool> mapa;
+    int nodeSize =graph.getNodes().size();
+    for(int i = 0; i < nodeSize; i++){
+        mapa.insert(pair<int, bool>(i, false));
+    }
+    vector<vector<int>> array;
+    vector<int> auxArray;
+    auxArray.reserve(nodeSize);
+    for(int i = 0; i < nodeSize; i++)
+        auxArray.push_back(0);
+    array.reserve(nodeSize);
+    for(int i = 0; i < nodeSize; i++) // Fill array with 0's
+        array.push_back(auxArray);
+    int s1 = 0, s2 = 0;
+    array.at(0).at(0) = origin;
+    for(auto i: aux.first) {
+        if(get<0>(i) == array.at(s1).at(s2)) {
+            s2++;
+            array.at(s1).at(s2) = get<1>(i);
+        }
+        if(get<1>(i) == destination) {
+            s2++;
+            array.at(s1).at(s2) = get<1>(i);
+            break;
+        }
+    }
+
+    for(int i = 0; i < nodeSize; i++) {
+        for (int k = 0; k < nodeSize; k++) {
+            cout << array.at(i).at(k) << " ";
+        }
+        cout << endl;
+    }
+
+
+    /* for(auto i : aux.first) {
+        vector<int> b;
+        if(!mapa.find(get<1>(i))->second) {
+            mapa.find(get<1>(i))->second = true;
+            b.push_back(get<1>(i));
+        }
+    } */
+    return ret;
+}
+
+/// 2.2 DONE HERE
+
+vector<pair<vector<int>, int>> App::scenery2_2(int origin, int destination, int augmentation){
+    vector<pair<vector<int>, int>> ret;
+    /* cout << "The maximum possible flow is "
+         << fordFulkerson2_1(graph.getNodes(), origin, destination, augmentation) << endl; */
 
     return ret;
 }

@@ -49,7 +49,7 @@ public:
     /**
      * @brief Remove non Pareto optimal paths
      */
-    void otimalPaths();
+    void optimalPaths();
 
     /**
      * @brief Maximizes capacity of group trip from Origin to Destination

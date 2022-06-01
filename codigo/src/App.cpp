@@ -26,7 +26,7 @@ void App::sortPaths() {
         int weight_v1 = i1.first.size(), weight_v2 = i2.first.size();
 
 
-        return weight_v1 < weight_v2;
+        return weight_v1 > weight_v2;
     });
 }
 
@@ -52,25 +52,34 @@ void App::printPaths() {
     }
 }
 
-void App::otimalPaths() {
+void App::optimalPaths() {
     reverse(pathsTaken.begin(), pathsTaken.end());
-    int max_c = pathsTaken[0].second+1, min_path = pathsTaken[0].first.size();
+    int max_c = pathsTaken[0].second+1, min_path = pathsTaken[0].first.size() + 1;
     int i = 0;
-
-    for(auto path : pathsTaken) {
-        if(i == 0);
-        else if(path.second < max_c) {
-            max_c = path.second;
-            if(path.first.size() >= min_path -1) {
+    printPaths();
+    for(i = 0; pathsTaken.at(i) != pathsTaken.back(); ) {
+        if(pathsTaken.at(i).second == max_c) {
+            if(pathsTaken.at(i).first.size() >= min_path) {
                 pathsTaken.erase(pathsTaken.begin()+ i);
                 continue;
             }
-            else {
-                min_path = path.first.size();
+            else
+                min_path = pathsTaken.at(i).first.size();
+        } else {
+            max_c = pathsTaken.at(i).second;
+            if(pathsTaken.at(i).first.size() >= min_path) {
+                pathsTaken.erase(pathsTaken.begin()+ i);
+                continue;
             }
+            else
+                min_path = pathsTaken.at(i).first.size();
         }
         i++;
     }
+
+    if(pathsTaken.back().first.size() >= min_path)
+        pathsTaken.erase(pathsTaken.begin()+ i);
+
     reverse(pathsTaken.begin(), pathsTaken.end());
 }
 
@@ -302,9 +311,7 @@ void printAllPaths(vector<vector<int>> &paths, const vector<Node>& nodes, int s,
     printAllPathsUtil(paths, nodes, s, d, visited, path, path_index, max_size);
 }
 
-
 ///////////////////////////////////////////
-
 
 // utility function for printing
 // the found path in graph
@@ -422,7 +429,7 @@ vector<pair<vector<int>, int>> App::scenery1_2(int origin, int destination) {
 
     pathsTaken = ret;
     sortPaths();
-    //otimalPaths();
+    optimalPaths();
     return ret;
 }
 
@@ -468,6 +475,8 @@ pair<vector<tuple<int, int, int>>, int>  fordFulkerson2_1(vector<Node> nodes, in
 {
     int u, v, V = nodes.size();
     vector<vector<int>> rGraph, rGraph2;
+    vector<tuple<int, int, int>> ret;
+    vector<pair<vector<pair<int, int>>, int >> anotherRet;
     for (u = 0; u < V; u++) {
         vector<int> vec;
         for (v = 0; v < V; v++){
@@ -493,8 +502,6 @@ pair<vector<tuple<int, int, int>>, int>  fordFulkerson2_1(vector<Node> nodes, in
     // store path
 
     int max_flow = 0; // There is no flow initially
-    vector<tuple<int, int, int>> ret;
-    vector<pair<vector<pair<int, int>>, int >> anotherRet;
 
     // Augment the flow while there is path from source to
     // sink
@@ -530,9 +537,6 @@ pair<vector<tuple<int, int, int>>, int>  fordFulkerson2_1(vector<Node> nodes, in
             ret.emplace_back(u, v, rGraph2[u][v] - rGraph[u][v]);
         }
     }
-    /* for(auto i:ret){
-        cout << get<0>(i) << " " << get<1>(i) << " " << get<2>(i) << " " << endl;
-    } */
     cout << endl;
     for(auto a :anotherRet) {
         reverse(a.first.begin(), a.first.end());

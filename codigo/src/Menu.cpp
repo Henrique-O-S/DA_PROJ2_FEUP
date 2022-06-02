@@ -246,11 +246,15 @@ Menu *Scenery2::nextMenu() {
         case 3: {
             return new Func2_3(app);
         }
+<<<<<<< HEAD
+        case 0: return new MainMenu(app);
+=======
         case 4: {
             app.printPaths(2);
             return this;
         }
         case 0: return nullptr;
+>>>>>>> 74d563bd90248d237c0af471d837252ca61455d5
         default: return invalidInput();
     }
 }

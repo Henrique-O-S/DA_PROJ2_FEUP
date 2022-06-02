@@ -248,7 +248,7 @@ Menu *Scenery2::nextMenu() {
 
             return new Func2_3(app);
         }
-        case 0: return nullptr;
+        case 0: return new MainMenu(app);
         default: return invalidInput();
     }
 }

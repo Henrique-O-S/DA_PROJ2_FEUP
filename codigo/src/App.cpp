@@ -113,7 +113,7 @@ pair<vector<int>, int> widest_path_problem(vector<Node> nodes, int src, int targ
             // and its widest distance so far
             int distance = max(widest[vertex.dest],
                                min(widest[vertex.origin], vertex.capacity));
-            /// TODO for first iteration, save max "i" obtained, then try to find lower values with the remaining arestas
+            /// TODO for first iteration, save max "i" obtained, then try to find lower values with the remaining edges
 
             // Relaxation of edge and adding into Priority Queue
             if (distance > widest[vertex.dest]) {

@@ -22,6 +22,7 @@ private:
     pair<map<pair<int,int>, int>, int> pathsMap;
     vector<vector<int>> flowGraph;
     vector<int> parent;
+    tuple<int, int, int> lastPathInfo = make_tuple(0,0,0);
 
 public:
 
@@ -76,7 +77,7 @@ public:
      * @brief TBD
      * @return TBD
      */
-    void fordFulkerson(int origin, int destination, int size, bool augmentation);
+    void edmondsKarp(int origin, int destination, int size, bool augmentation, bool findMax);
 
     /**
      * @brief TBD
@@ -92,7 +93,7 @@ public:
      * @param augmentation Number of people taking the trip
      * @return TBD
      */
-    vector<pair<vector<int>, int>> scenery2_2(int augmentation);
+    vector<pair<vector<int>, int>> scenery2_2(unsigned int augmentation);
 
     /**
      * @brief TBD

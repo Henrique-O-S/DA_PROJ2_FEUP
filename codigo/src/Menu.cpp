@@ -241,7 +241,7 @@ Menu *Scenery2::nextMenu() {
             return new Func2_1(app);
         }
         case 2: {
-            return this;
+            return new Func2_2(app);
         }
         case 3: {
             return new Func2_3(app);
@@ -319,6 +319,8 @@ Menu *Func2_2::nextMenu() {
         return invalidInput();
     int cap;
     cap = stoi(capacity);
+    if(cap <= 0)
+        return invalidInput();
     auto ret = app.scenery2_2(cap);
 
     return new Scenery2(app);

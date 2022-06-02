@@ -6,7 +6,7 @@
 App::App() = default;
 
 void App::loadData(){ ///TODO assert max that origin is > 0 and end is < n
-    auto ret = fileReader.getVehicleFromFiles(filepath + "in01_b.txt");
+    auto ret = fileReader.getVehicleFromFiles(filepath + "in03_b.txt");
     if(ret.second == -1) {
         cout << "Loading data failed";
         return;
@@ -15,6 +15,7 @@ void App::loadData(){ ///TODO assert max that origin is > 0 and end is < n
         graph.addNode(i);
         parent.push_back(0);
     }
+    parent.push_back(0); // to fill up from 0 to last node
 
 
     for(const Vehicle& vehicle : *ret.first)
@@ -64,7 +65,12 @@ void App::printPaths(int scenario) {
             for(auto m : pathsMap.first) {
                 cout << m.first.first << "\t" << m.first.second << "\t\t" << m.second << endl;
             }
-            cout << "The capacity of the trip is at most: " << pathsMap.second << endl;
+            if(get<2>(lastPathInfo) > 0) {
+                cout << "The current size and capacity of the trip is : " << get<2>(lastPathInfo)
+                            << "/" << pathsMap.second << endl;
+            } else {
+                cout << "The capacity of the trip is at most: " << pathsMap.second << endl;
+            }
             break;
         default:
             cout << "Insert a valid scenario." << endl;
@@ -453,112 +459,12 @@ vector<pair<vector<int>, int>> App::scenery1_2(int origin, int destination) {
 }
 
 //Scenery 2
-/// 2.1 DONE HERE
-bool bfs(vector<vector<int>> rGraph, int s, int t, int parent[], int V)
+
+bool bfs(vector<vector<int>> flowGraph, int origin, int destination, int parent[], int nodeSize)
 {
-    // Create a visited array and mark all vertices as not
-    // visited
-    bool visited[V];
-    memset(visited, 0, sizeof(visited));
-
-    // Create a queue, enqueue source vertex and mark source
-    // vertex as visited
-    queue<int> q;
-    q.push(s);
-    visited[s] = true;
-    parent[s] = -1;
-
-    // Standard BFS Loop
-    while (!q.empty()) {
-        int u = q.front();
-        q.pop();
-
-        for (int v = 0; v < V; v++) {
-            if (visited[v] == false && rGraph[u][v] > 0) {
-                if (v == t) {
-                    parent[v] = u;
-                    return true;
-                }
-                q.push(v);
-                parent[v] = u;
-                visited[v] = true;
-            }
-        }
-    }
-
-    // We didn't reach sink in BFS starting from source, so
-    // return false
-    return false;
-}
-pair<map<pair<int,int>, int>, int>  fordFulkerson2_1(vector<Node> nodes, int s, int t, int size)
-{
-    int u, v, V = nodes.size();
-    vector<vector<int>> rGraph;
-    map<pair<int,int>, int> contain;
-    for (u = 0; u < V; u++) {
-        vector<int> vec;
-        for (v = 0; v < V; v++){
-            bool breaker = false;
-            for(auto itr : nodes[u].adj) {
-                if(itr.dest == v) {
-                    if(breaker) {
-                        vec.back() +=itr.capacity;
-                        continue;
-                    }
-                    else {
-                        vec.push_back(itr.capacity);
-                        breaker = true;
-                    }
-                }
-            }
-            if(!breaker) vec.push_back(0);
-        }
-        rGraph.push_back(vec);
-    }
-    int parent[V]; // This array is filled by BFS and to
-    // store path
-
-    int max_flow = 0; // There is no flow initially
-
-    // Augment the flow while there is path from source to
-    // sink
-    while (bfs(rGraph, s, t, parent, V)) {
-        // Find minimum residual capacity of the edges along
-        // the path filled by BFS. Or we can say find the
-        // maximum flow through the path found.
-        int path_flow = INT_MAX;
-        for (v = t; v != s; v = parent[v]) {
-            u = parent[v];
-            path_flow = min(path_flow, rGraph[u][v]);
-        }
-        // update residual capacities of the edges and
-        // reverse edges along the path
-        for (v = t; v != s; v = parent[v]) {
-            u = parent[v];
-            rGraph[u][v] -= path_flow;
-            rGraph[v][u] += path_flow;
-            if(contain.find(make_pair(u, v)) == contain.end())
-                contain.insert(pair<pair<int,int>, int> (make_pair(u, v), path_flow));
-            else
-                contain.find(make_pair(u, v))->second += path_flow;
-        }
-        // Add path flow to overall flow
-        max_flow += path_flow;
-        if(max_flow >= size) break;
-    }
-    // Return the overall flow
-    return make_pair(contain, max_flow);
-}
-
-bool _bfs(vector<vector<int>> flowGraph, int origin, int destination, vector<int>parent, int nodeSize)
-{
-    // Create a visited array and mark all vertices as not
-    // visited
     bool visited[nodeSize];
     memset(visited, 0, sizeof(visited));
 
-    // Create a queue, enqueue source vertex and mark source
-    // vertex as visited
     queue<int> q;
     q.push(origin);
     visited[origin] = true;
@@ -581,16 +487,16 @@ bool _bfs(vector<vector<int>> flowGraph, int origin, int destination, vector<int
             }
         }
     }
-
     // We didn'destination reach the destination so we return false
     return false;
 }
-
-void App::fordFulkerson(int origin, int destination, int size, bool augmentation) {
+void App::edmondsKarp(int origin, int destination, int size, bool augmentation, bool findMax) {
     vector<Node> nodes = graph.getNodes();
+    lastPathInfo = make_tuple(origin, destination, size); // Update lastPathInfo with new data
     int u, v, nodeSize = nodes.size();
+    int auxParent[nodeSize];
     if(!augmentation) {
-        flowGraph.clear();
+        if(!flowGraph.empty()) flowGraph.clear();
         for (u = 0; u < nodeSize; u++) {
             parent.at(u) = 0;
             vector<int> vec;
@@ -615,17 +521,20 @@ void App::fordFulkerson(int origin, int destination, int size, bool augmentation
         pathsMap.first.clear();
         pathsMap.second = 0;
     }
-
-    while (_bfs(flowGraph, origin, destination, parent, nodeSize)) {
+    else {
+        for(int i = 0; i < parent.size(); i++) {
+            auxParent[i] = parent.at(i);
+        }
+    }
+    while (bfs(flowGraph, origin, destination, auxParent, nodeSize)) {
         int path_flow = INT_MAX;
 
-        for (v = destination; v != origin; v = parent[v]) {
-            u = parent[v];
+        for (v = destination; v != origin; v = auxParent[v]) {
+            u = auxParent[v];
             path_flow = min(path_flow, flowGraph[u][v]);
         }
-
-        for (v = destination; v != origin; v = parent[v]) {
-            u = parent[v];
+        for (v = destination; v != origin; v = auxParent[v]) {
+            u = auxParent[v];
             flowGraph[u][v] -= path_flow;
             flowGraph[v][u] += path_flow;
             if(pathsMap.first.find(make_pair(u, v)) == pathsMap.first.end())
@@ -634,18 +543,27 @@ void App::fordFulkerson(int origin, int destination, int size, bool augmentation
                 pathsMap.first.find(make_pair(u, v))->second += path_flow;
         }
         pathsMap.second += path_flow;
-        if(pathsMap.second >= size) return;
+        if(findMax);
+        else if(pathsMap.second >= size) break;
     }
+    for(int i = 1; i < nodeSize; i++) {
+        parent.at(i) = auxParent[i];
+    }
+    if(findMax) {
+        lastPathInfo = make_tuple(origin, destination, pathsMap.second); // Update lastPathInfo with new data
+    }
+
 }
+
+/// 2.1 DONE HERE
 
 vector<pair<vector<int>, int>> App::scenery2_1(int origin, int destination, int size){
     vector<pair<vector<int>, int>> ret;
-    auto aux = fordFulkerson2_1(graph.getNodes(), origin, destination, size);
-    pathsMap.first = aux.first;
-    pathsMap.second = aux.second;
-    if(aux.second < size) {
+    if(origin >= graph.getNodes().size() || destination >= graph.getNodes().size()) return ret;
+    edmondsKarp(origin, destination, size, false, false);
+    if(pathsMap.second < size) {
         cout << "The size of the group exceeds the maximum possible capacity for the trip ["<<origin<<"] - ["
-        << destination <<"] which is: "<<  aux.second  << endl;
+        << destination <<"] which is: "<<  pathsMap.second  << endl;
     } else {
         cout << "The path flow for the trip is:" << endl;
         printPaths(2);
@@ -656,82 +574,41 @@ vector<pair<vector<int>, int>> App::scenery2_1(int origin, int destination, int 
 
 /// 2.2 DONE HERE
 
-vector<pair<vector<int>, int>> App::scenery2_2(int augmentation){
+vector<pair<vector<int>, int>> App::scenery2_2(unsigned augmentation){
     vector<pair<vector<int>, int>> ret;
-
+    int origin = get<0>(lastPathInfo), destination = get<1>(lastPathInfo);
+    unsigned size = get<2>(lastPathInfo);
+    if(origin == 0 || destination == 0) {
+        return ret;
+    }
+    if((size+augmentation) <= pathsMap.second) {
+        lastPathInfo = make_tuple(origin, destination, size + augmentation);
+        cout << "No need to do the algorithm. The path flow for the trip is:" << endl;
+        printPaths(2);
+        return ret;
+    }
+    edmondsKarp(origin, destination, (size + augmentation), true, false);
+    if(pathsMap.second < get<2>(lastPathInfo)) {
+        cout << "The size of the group exceeds the maximum possible capacity for the trip ["<<origin
+                <<"] - [" << destination <<"] which is: "<<  pathsMap.second << " < " << get<2>(lastPathInfo) << endl;
+        lastPathInfo = make_tuple(origin, destination, size);
+    } else {
+        cout << "The path flow for the trip is:" << endl;
+        printPaths(2);
+    }
 
     return ret;
 }
 
 /// 2.3 DONE HERE
 
-// Returns the maximum flow from s to t in the given graph
-pair<map<pair<int,int>, int>, int>  fordFulkerson2_3(vector<Node> nodes, int s, int t)
-{
-    int u, v, V = nodes.size();
-    vector<vector<int>> rGraph;
-    map<pair<int,int>, int> contain;
-    for (u = 0; u < V; u++) {
-        vector<int> vec;
-        for (v = 0; v < V; v++){
-            bool breaker = false;
-            for(auto itr : nodes[u].adj) {
-                if(itr.dest == v) {
-                    if(breaker) {
-                        vec.back() +=itr.capacity;
-                        continue;
-                    }
-                    else {
-                        vec.push_back(itr.capacity);
-                        breaker = true;
-                    }
-                }
-            }
-            if(!breaker) vec.push_back(0);
-        }
-        rGraph.push_back(vec);
-    }
-    int parent[V]; // This array is filled by BFS and to
-    // store path
-
-    int max_flow = 0; // There is no flow initially
-
-    // Augment the flow while there is path from source to
-    // sink
-    while (bfs(rGraph, s, t, parent, V)) {
-        // Find minimum residual capacity of the edges along
-        // the path filled by BFS. Or we can say find the
-        // maximum flow through the path found.
-        int path_flow = INT_MAX;
-        for (v = t; v != s; v = parent[v]) {
-            u = parent[v];
-            path_flow = min(path_flow, rGraph[u][v]);
-        }
-        // update residual capacities of the edges and
-        // reverse edges along the path
-        for (v = t; v != s; v = parent[v]) {
-            u = parent[v];
-            rGraph[u][v] -= path_flow;
-            rGraph[v][u] += path_flow;
-            if(contain.find(make_pair(u, v)) == contain.end())
-                contain.insert(pair<pair<int,int>, int> (make_pair(u, v), path_flow));
-            else
-                contain.find(make_pair(u, v))->second += path_flow;
-        }
-        // Add path flow to overall flow
-        max_flow += path_flow;
-    }
-    // Return the overall flow
-    return make_pair(contain, max_flow);
-}
-
 vector<pair<vector<int>, int>> App::scenery2_3(int origin, int destination) {
     vector<pair<vector<int>, int>> ret;
-    auto aux = fordFulkerson2_3(graph.getNodes(), origin, destination);
+    if(origin >= graph.getNodes().size() || destination >= graph.getNodes().size()) return ret;
+    edmondsKarp(origin, destination, -1, false, true);
     cout << "The maximum capacity for the trip ["<<origin<<"] - [" << destination <<"] is: "
-                <<  aux.second << endl;
-    pathsMap.first = aux.first;
-    pathsMap.second = aux.second;
+         <<  pathsMap.second << endl;
+
     return ret;
 }
 

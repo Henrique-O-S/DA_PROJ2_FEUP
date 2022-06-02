@@ -86,14 +86,14 @@ public:
      * @param size Amount of people taking the trip
      * @return TBD
      */
-    vector<pair<vector<int>, int>> scenery2_1(int origin, int destination, int size);
+    int scenery2_1(int origin, int destination, int size);
 
     /**
      * @brief TBD
      * @param augmentation Number of people taking the trip
      * @return TBD
      */
-    vector<pair<vector<int>, int>> scenery2_2(unsigned int augmentation);
+    int scenery2_2(unsigned int augmentation);
 
     /**
      * @brief TBD
@@ -101,7 +101,7 @@ public:
      * @param destination Destination Point
      * @return TBD
      */
-    vector<pair<vector<int>, int>> scenery2_3(int origin, int destination);
+    int scenery2_3(int origin, int destination);
 
 };
 

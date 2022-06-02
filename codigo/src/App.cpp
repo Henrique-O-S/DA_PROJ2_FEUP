@@ -6,7 +6,7 @@
 App::App() = default;
 
 void App::loadData(){ ///TODO assert max that origin is > 0 and end is < n
-    auto ret = fileReader.getVehicleFromFiles(filepath + "in03_b.txt");
+    auto ret = fileReader.getVehicleFromFiles(filepath + "smallTest.txt");
     if(ret.second == -1) {
         cout << "Loading data failed";
         return;
@@ -557,9 +557,8 @@ void App::edmondsKarp(int origin, int destination, int size, bool augmentation, 
 
 /// 2.1 DONE HERE
 
-vector<pair<vector<int>, int>> App::scenery2_1(int origin, int destination, int size){
-    vector<pair<vector<int>, int>> ret;
-    if(origin >= graph.getNodes().size() || destination >= graph.getNodes().size()) return ret;
+int App::scenery2_1(int origin, int destination, int size){
+    if(origin >= graph.getNodes().size() || destination >= graph.getNodes().size()) return 1;
     edmondsKarp(origin, destination, size, false, false);
     if(pathsMap.second < size) {
         cout << "The size of the group exceeds the maximum possible capacity for the trip ["<<origin<<"] - ["
@@ -569,23 +568,22 @@ vector<pair<vector<int>, int>> App::scenery2_1(int origin, int destination, int 
         printPaths(2);
     }
     /// TODO verificar todos os caminhos possiveis e construir a partir daí
-    return ret;
+    return 0;
 }
 
 /// 2.2 DONE HERE
 
-vector<pair<vector<int>, int>> App::scenery2_2(unsigned augmentation){
-    vector<pair<vector<int>, int>> ret;
+int App::scenery2_2(unsigned augmentation){
     int origin = get<0>(lastPathInfo), destination = get<1>(lastPathInfo);
     unsigned size = get<2>(lastPathInfo);
     if(origin == 0 || destination == 0) {
-        return ret;
+        return 1;
     }
     if((size+augmentation) <= pathsMap.second) {
         lastPathInfo = make_tuple(origin, destination, size + augmentation);
         cout << "No need to do the algorithm. The path flow for the trip is:" << endl;
         printPaths(2);
-        return ret;
+        return 0;
     }
     edmondsKarp(origin, destination, (size + augmentation), true, false);
     if(pathsMap.second < get<2>(lastPathInfo)) {
@@ -597,18 +595,17 @@ vector<pair<vector<int>, int>> App::scenery2_2(unsigned augmentation){
         printPaths(2);
     }
 
-    return ret;
+    return 0;
 }
 
 /// 2.3 DONE HERE
 
-vector<pair<vector<int>, int>> App::scenery2_3(int origin, int destination) {
-    vector<pair<vector<int>, int>> ret;
-    if(origin >= graph.getNodes().size() || destination >= graph.getNodes().size()) return ret;
+int App::scenery2_3(int origin, int destination) {
+    if(origin >= graph.getNodes().size() || destination >= graph.getNodes().size()) return 0;
     edmondsKarp(origin, destination, -1, false, true);
     cout << "The maximum capacity for the trip ["<<origin<<"] - [" << destination <<"] is: "
          <<  pathsMap.second << endl;
 
-    return ret;
+    return 0;
 }
 

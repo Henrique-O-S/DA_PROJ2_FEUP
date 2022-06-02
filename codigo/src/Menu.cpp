@@ -101,10 +101,10 @@ void Scenery1::display() {
 Menu *Scenery1::nextMenu() {
     switch (readInt()) {
         case 1: {
-            return new Func1(app);
+            return new Func1_1(app);
         }
         case 2: {
-            return new Func2(app);
+            return new Func1_2(app);
         }
         case 3: {
             app.printGraph();
@@ -119,11 +119,11 @@ Menu *Scenery1::nextMenu() {
     }
 }
 
-Func1::Func1(App &app) : Menu(app) {
+Func1_1::Func1_1(App &app) : Menu(app) {
 
 }
 
-void Func1::display() {
+void Func1_1::display() {
     cout << endl;
     cout << "==============================="<<endl;
     cout << "Q - Exit" << endl << endl;
@@ -140,7 +140,7 @@ bool isNumber(const string& str) {
 
 
 
-Menu *Func1::nextMenu() {
+Menu *Func1_1::nextMenu() {
     stringstream so(readStr());
     string origin, destination;
     so >> origin;
@@ -178,11 +178,11 @@ Menu *Func1::nextMenu() {
     return new Scenery1(app);
 }
 
-Func2::Func2(App &app) : Menu(app) {
+Func1_2::Func1_2(App &app) : Menu(app) {
 
 }
 
-void Func2::display() {
+void Func1_2::display() {
     cout << endl;
     cout << "==============================="<<endl;
     cout << "Q - Exit" << endl << endl;
@@ -190,7 +190,7 @@ void Func2::display() {
 }
 
 
-Menu *Func2::nextMenu() {
+Menu *Func1_2::nextMenu() {
     stringstream so(readStr());
     string origin, destination;
     so >> origin;
@@ -291,9 +291,6 @@ Menu *Func2_1::nextMenu() {
     }
 
     auto ret = app.scenery2_1(ori, dest, cpcity);
-    if(ret.empty()) {
-        ;
-    }
     cout << endl;
     return new Scenery2(app);
 }
@@ -357,9 +354,6 @@ Menu *Func2_3::nextMenu() {
     }
 
     auto ret = app.scenery2_3(ori, dest);
-    if(ret.empty()) {
-        ;
-    }
     cout << endl;
     return new Scenery2(app);
 }

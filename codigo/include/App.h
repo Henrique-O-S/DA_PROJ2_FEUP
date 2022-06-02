@@ -3,6 +3,7 @@
 
 
 #include <string>
+#include <map>
 #include "Vehicle.h"
 #include "FileReader.h"
 #include "Graph.h"
@@ -18,6 +19,9 @@ private:
     vector<Vehicle> vehicles;
     Graph graph = Graph(true);
     vector<pair<vector<int>, int>> pathsTaken;
+    pair<map<pair<int,int>, int>, int> pathsMap;
+    vector<vector<int>> flowGraph;
+    vector<int> parent;
 
 public:
 
@@ -39,7 +43,7 @@ public:
     /**
      * @brief Prints to the console the Paths taken
      */
-    void printPaths();
+    void printPaths(int scenario);
 
     /**
      * @brief Sorts the Paths vector
@@ -67,6 +71,13 @@ public:
      */
     vector<pair<vector<int>, int>> scenery1_2(int origin, int destination);
 
+
+        /**
+     * @brief TBD
+     * @return TBD
+     */
+    void fordFulkerson(int origin, int destination, int size, bool augmentation);
+
     /**
      * @brief TBD
      * @param origin Origin point
@@ -78,12 +89,10 @@ public:
 
     /**
      * @brief TBD
-     * @param origin Origin point
-     * @param destination Destination Point
-     * @param size Amount of people taking the trip
+     * @param augmentation Number of people taking the trip
      * @return TBD
      */
-    vector<pair<vector<int>, int>> scenery2_2(int origin, int destination, int augmentation);
+    vector<pair<vector<int>, int>> scenery2_2(int augmentation);
 
     /**
      * @brief TBD

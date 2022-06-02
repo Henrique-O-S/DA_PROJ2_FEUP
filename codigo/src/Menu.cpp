@@ -111,7 +111,7 @@ Menu *Scenery1::nextMenu() {
             return this;
         }
         case 4: {
-            app.printPaths();
+            app.printPaths(1);
             return this;
         }
         case 0: return nullptr;
@@ -214,7 +214,7 @@ Menu *Func2::nextMenu() {
         return this;
     }
     cout << endl;
-    app.printPaths();
+    app.printPaths(1);
     return new Scenery1(app);
 }
 
@@ -230,6 +230,7 @@ void Scenery2::display() {
     cout << "1 - Option 2.1" << endl;
     cout << "2 - Option 2.2" << endl;
     cout << "3 - Option 2.3" << endl;
+    cout << "4 - Print Path taken" << endl;
     cout << "0 - Exit" << endl;
     cout << endl;
 }
@@ -237,16 +238,17 @@ void Scenery2::display() {
 Menu *Scenery2::nextMenu() {
     switch (readInt()) {
         case 1: {
-
             return new Func2_1(app);
         }
         case 2: {
-
             return this;
         }
         case 3: {
-
             return new Func2_3(app);
+        }
+        case 4: {
+            app.printPaths(2);
+            return this;
         }
         case 0: return nullptr;
         default: return invalidInput();
@@ -304,10 +306,21 @@ void Func2_2::display() {
     cout << endl;
     cout << "==============================="<<endl;
     cout << "Q - Exit" << endl << endl;
-    cout << "Input:\n<Origin> <Destination>";
+    cout << "Input:\n<Augmentation>";
 }
 
 Menu *Func2_2::nextMenu() {
+    stringstream so(readStr());
+    string capacity;
+    so >> capacity;
+    if(capacity.find('q') != string::npos || capacity.find('Q') != string::npos)
+        return nullptr;
+    if(!isNumber(capacity))
+        return invalidInput();
+    int cap;
+    cap = stoi(capacity);
+    auto ret = app.scenery2_2(cap);
+
     return new Scenery2(app);
 }
 

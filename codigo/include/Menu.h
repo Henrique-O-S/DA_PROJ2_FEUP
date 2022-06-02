@@ -68,16 +68,16 @@ public:
     Menu *nextMenu() override;
 };
 
-class Func1: public Menu{
+class Func1_1: public Menu{
 public:
-    explicit Func1(App &app);
+    explicit Func1_1(App &app);
     void display() override;
     Menu *nextMenu() override;
 };
 
-class Func2: public Menu{
+class Func1_2: public Menu{
 public:
-    explicit Func2(App &app);
+    explicit Func1_2(App &app);
     void display() override;
     Menu *nextMenu() override;
 };

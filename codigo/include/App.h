@@ -3,6 +3,7 @@
 
 
 #include <string>
+#include <map>
 #include "Vehicle.h"
 #include "FileReader.h"
 #include "Graph.h"
@@ -18,6 +19,10 @@ private:
     vector<Vehicle> vehicles;
     Graph graph = Graph(true);
     vector<pair<vector<int>, int>> pathsTaken;
+    pair<map<pair<int,int>, int>, int> pathsMap;
+    vector<vector<int>> flowGraph;
+    vector<int> parent;
+    tuple<int, int, int> lastPathInfo = make_tuple(0,0,0);
 
 public:
 
@@ -39,7 +44,7 @@ public:
     /**
      * @brief Prints to the console the Paths taken
      */
-    void printPaths();
+    void printPaths(int scenario);
 
     /**
      * @brief Sorts the Paths vector
@@ -49,7 +54,7 @@ public:
     /**
      * @brief Remove non Pareto optimal paths
      */
-    void otimalPaths();
+    void optimalPaths();
 
     /**
      * @brief Maximizes capacity of group trip from Origin to Destination
@@ -67,14 +72,12 @@ public:
      */
     vector<pair<vector<int>, int>> scenery1_2(int origin, int destination);
 
-    /**
+
+        /**
      * @brief TBD
-     * @param origin Origin point
-     * @param destination Destination Point
-     * @param size Amount of people taking the trip
      * @return TBD
      */
-    vector<pair<vector<int>, int>> scenery2_1(int origin, int destination, int size);
+    void edmondsKarp(int origin, int destination, int size, bool augmentation, bool findMax);
 
     /**
      * @brief TBD
@@ -83,7 +86,14 @@ public:
      * @param size Amount of people taking the trip
      * @return TBD
      */
-    vector<pair<vector<int>, int>> scenery2_2(int origin, int destination, int augmentation);
+    int scenery2_1(int origin, int destination, int size);
+
+    /**
+     * @brief TBD
+     * @param augmentation Number of people taking the trip
+     * @return TBD
+     */
+    int scenery2_2(unsigned int augmentation);
 
     /**
      * @brief TBD
@@ -91,7 +101,7 @@ public:
      * @param destination Destination Point
      * @return TBD
      */
-    vector<pair<vector<int>, int>> scenery2_3(int origin, int destination);
+    int scenery2_3(int origin, int destination);
 
 };
 

@@ -101,17 +101,17 @@ void Scenery1::display() {
 Menu *Scenery1::nextMenu() {
     switch (readInt()) {
         case 1: {
-            return new Func1(app);
+            return new Func1_1(app);
         }
         case 2: {
-            return new Func2(app);
+            return new Func1_2(app);
         }
         case 3: {
             app.printGraph();
             return this;
         }
         case 4: {
-            app.printPaths();
+            app.printPaths(1);
             return this;
         }
         case 0: return nullptr;
@@ -119,11 +119,11 @@ Menu *Scenery1::nextMenu() {
     }
 }
 
-Func1::Func1(App &app) : Menu(app) {
+Func1_1::Func1_1(App &app) : Menu(app) {
 
 }
 
-void Func1::display() {
+void Func1_1::display() {
     cout << endl;
     cout << "==============================="<<endl;
     cout << "Q - Exit" << endl << endl;
@@ -140,7 +140,7 @@ bool isNumber(const string& str) {
 
 
 
-Menu *Func1::nextMenu() {
+Menu *Func1_1::nextMenu() {
     stringstream so(readStr());
     string origin, destination;
     so >> origin;
@@ -178,11 +178,11 @@ Menu *Func1::nextMenu() {
     return new Scenery1(app);
 }
 
-Func2::Func2(App &app) : Menu(app) {
+Func1_2::Func1_2(App &app) : Menu(app) {
 
 }
 
-void Func2::display() {
+void Func1_2::display() {
     cout << endl;
     cout << "==============================="<<endl;
     cout << "Q - Exit" << endl << endl;
@@ -190,7 +190,7 @@ void Func2::display() {
 }
 
 
-Menu *Func2::nextMenu() {
+Menu *Func1_2::nextMenu() {
     stringstream so(readStr());
     string origin, destination;
     so >> origin;
@@ -214,7 +214,7 @@ Menu *Func2::nextMenu() {
         return this;
     }
     cout << endl;
-    app.printPaths();
+    app.printPaths(1);
     return new Scenery1(app);
 }
 
@@ -230,6 +230,7 @@ void Scenery2::display() {
     cout << "1 - Option 2.1" << endl;
     cout << "2 - Option 2.2" << endl;
     cout << "3 - Option 2.3" << endl;
+    cout << "4 - Print Path taken" << endl;
     cout << "0 - Exit" << endl;
     cout << endl;
 }
@@ -237,18 +238,23 @@ void Scenery2::display() {
 Menu *Scenery2::nextMenu() {
     switch (readInt()) {
         case 1: {
-
             return new Func2_1(app);
         }
         case 2: {
-
-            return this;
+            return new Func2_2(app);
         }
         case 3: {
-
             return new Func2_3(app);
         }
+<<<<<<< HEAD
         case 0: return new MainMenu(app);
+=======
+        case 4: {
+            app.printPaths(2);
+            return this;
+        }
+        case 0: return nullptr;
+>>>>>>> 74d563bd90248d237c0af471d837252ca61455d5
         default: return invalidInput();
     }
 }
@@ -289,9 +295,6 @@ Menu *Func2_1::nextMenu() {
     }
 
     auto ret = app.scenery2_1(ori, dest, cpcity);
-    if(ret.empty()) {
-        ;
-    }
     cout << endl;
     return new Scenery2(app);
 }
@@ -304,10 +307,23 @@ void Func2_2::display() {
     cout << endl;
     cout << "==============================="<<endl;
     cout << "Q - Exit" << endl << endl;
-    cout << "Input:\n<Origin> <Destination>";
+    cout << "Input:\n<Augmentation>";
 }
 
 Menu *Func2_2::nextMenu() {
+    stringstream so(readStr());
+    string capacity;
+    so >> capacity;
+    if(capacity.find('q') != string::npos || capacity.find('Q') != string::npos)
+        return nullptr;
+    if(!isNumber(capacity))
+        return invalidInput();
+    int cap;
+    cap = stoi(capacity);
+    if(cap <= 0)
+        return invalidInput();
+    auto ret = app.scenery2_2(cap);
+
     return new Scenery2(app);
 }
 
@@ -342,9 +358,6 @@ Menu *Func2_3::nextMenu() {
     }
 
     auto ret = app.scenery2_3(ori, dest);
-    if(ret.empty()) {
-        ;
-    }
     cout << endl;
     return new Scenery2(app);
 }

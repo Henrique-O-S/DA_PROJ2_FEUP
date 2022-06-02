@@ -577,9 +577,9 @@ int earliestStart(vector<Node> &nodes) {
 int App::scenery2_4(int origin, int destination, int size) {
 
     if(origin >= graph.getNodes().size() || destination >= graph.getNodes().size()) return 1;
-    auto aux = edmondsKarp(origin, destination, size, false, false);
+    edmondsKarp(origin, destination, size, false, false);
 
-    earliestStart(aux.getNodes());
+    earliestStart(auxGraph.getNodes());
     return 0;
 }
 
@@ -589,9 +589,8 @@ int App::scenery2_5(int origin, int destination, int size) {
     queue<int> S;
     edmondsKarp(origin, destination, size, false, false);
     vector<Node> &nodes = auxGraph.getNodes();
-    int minDuration = earliestStart(nodes);
-    vector<int> stations;
-    //Graph transposed = graph.transpose();
+    earliestStart(nodes);
+    vector<int> stops;
     vector<int> wait(nodes.size(),0);
 
     for(int i = 1; i < nodes.size(); i++){
@@ -607,14 +606,15 @@ int App::scenery2_5(int origin, int destination, int size) {
     }
     for(int i = 1; i <= wait.size(); i++){
         if(wait[i] == maxWait){
-            stations.push_back(i);
+            stops.push_back(i);
         }
     }
+    /// TODO CHANGE THIS
     cout << "Max time people have to wait: " << maxWait << endl;
-    cout << "That happens in " << stations.size() << " stations" << endl;
-    if(!stations.empty()){
-        cout << "Stations nr: ";
-        for(int i : stations)
+    cout << "That happens in " << stops.size() << " stops" << endl;
+    if(!stops.empty()){
+        cout << "Stops number: ";
+        for(int i : stops)
             cout << i << " ";
     }
     cout << endl;

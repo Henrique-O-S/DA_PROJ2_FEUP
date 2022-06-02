@@ -175,7 +175,7 @@ Menu *Func1_1::nextMenu() {
     }
     cout << ")" << endl;
 
-    return new Scenery1(app);
+    return nullptr;
 }
 
 Func1_2::Func1_2(App &app) : Menu(app) {
@@ -215,7 +215,7 @@ Menu *Func1_2::nextMenu() {
     }
     cout << endl;
     app.printPaths(1);
-    return new Scenery1(app);
+    return nullptr;
 }
 
 
@@ -246,15 +246,13 @@ Menu *Scenery2::nextMenu() {
         case 3: {
             return new Func2_3(app);
         }
-<<<<<<< HEAD
-        case 0: return new MainMenu(app);
-=======
+
         case 4: {
             app.printPaths(2);
             return this;
         }
+
         case 0: return nullptr;
->>>>>>> 74d563bd90248d237c0af471d837252ca61455d5
         default: return invalidInput();
     }
 }
@@ -296,7 +294,7 @@ Menu *Func2_1::nextMenu() {
 
     auto ret = app.scenery2_1(ori, dest, cpcity);
     cout << endl;
-    return new Scenery2(app);
+    return nullptr;
 }
 
 Func2_2::Func2_2(App &app) : Menu(app) {
@@ -324,7 +322,7 @@ Menu *Func2_2::nextMenu() {
         return invalidInput();
     auto ret = app.scenery2_2(cap);
 
-    return new Scenery2(app);
+    return nullptr;
 }
 
 Func2_3::Func2_3(App &app) : Menu(app) {
@@ -359,5 +357,5 @@ Menu *Func2_3::nextMenu() {
 
     auto ret = app.scenery2_3(ori, dest);
     cout << endl;
-    return new Scenery2(app);
+    return nullptr;
 }

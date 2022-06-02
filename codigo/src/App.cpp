@@ -6,7 +6,7 @@
 App::App() = default;
 
 void App::loadData(){ ///TODO assert max that origin is > 0 and end is < n
-    auto ret = fileReader.getVehicleFromFiles(filepath + "smallTest.txt");
+    auto ret = fileReader.getVehicleFromFiles(filepath + "in01_b.txt");
     if(ret.second == -1) {
         cout << "Loading data failed";
         return;
@@ -142,7 +142,7 @@ pair<vector<int>, int> maxCapacityProblem(vector<Node> nodes, int src, int targe
 
             int capacity = max(largest[vertex.dest],
                                min(largest[vertex.origin], vertex.capacity));
-            
+
             if (capacity > largest[vertex.dest]) {
                 largest[vertex.dest] = capacity;
                 parent[vertex.dest] = current_src;
@@ -309,8 +309,7 @@ void findpaths(vector<Node> nodes, int src,
 }
 
 /// 1.2 DONE HERE
-/// TODO Make this func clear reps of same capacity and transbordos
-/// TODO clear up the function to not go over PATH SIZE *********************
+/// TODO Use EdmondKarp algorithm to find all the paths
 vector<pair<vector<int>, int>> App::scenery1_2(int origin, int destination) {
     pathsTaken.clear();
     vector<vector<int>> paths;
@@ -374,7 +373,7 @@ vector<pair<vector<int>, int>> App::scenery1_2(int origin, int destination) {
 
 //Scenery 2
 
-bool bfs(vector<vector<int>> flowGraph, int origin, int destination, int parent[], int nodeSize)
+bool bfs(vector<vector<pair<int, int>>> flowGraph, int origin, int destination, int parent[], int nodeSize)
 {
     bool visited[nodeSize];
     memset(visited, 0, sizeof(visited));
@@ -390,7 +389,7 @@ bool bfs(vector<vector<int>> flowGraph, int origin, int destination, int parent[
         q.pop();
 
         for (int v = 0; v < nodeSize; v++) {
-            if (visited[v] == false && flowGraph[u][v] > 0) {
+            if (visited[v] == false && flowGraph[u][v].first > 0) {
                 if (v == destination) {
                     parent[v] = u;
                     return true;
@@ -404,31 +403,38 @@ bool bfs(vector<vector<int>> flowGraph, int origin, int destination, int parent[
     // We didn'destination reach the destination so we return false
     return false;
 }
-void App::edmondsKarp(int origin, int destination, int size, bool augmentation, bool findMax) {
+Graph App::edmondsKarp(int origin, int destination, int size, bool augmentation, bool findMax) {
+
+    if(get<0>(lastPathInfo) == origin && get<1>(lastPathInfo) == destination) {
+        augmentation = true;
+    }
+
     vector<Node> nodes = graph.getNodes();
     lastPathInfo = make_tuple(origin, destination, size); // Update lastPathInfo with new data
     int u, v, nodeSize = nodes.size();
     int auxParent[nodeSize];
     if(!augmentation) {
+        auxGraph = Graph(true);
         if(!flowGraph.empty()) flowGraph.clear();
         for (u = 0; u < nodeSize; u++) {
+            if(u > 0) auxGraph.addNode(u);
             parent.at(u) = 0;
-            vector<int> vec;
+            vector<pair<int, int>> vec;
             for (v = 0; v < nodeSize; v++){
                 bool breaker = false;
                 for(auto itr : nodes[u].adj) {
                     if(itr.dest == v) {
                         if(breaker) {
-                            vec.back() +=itr.capacity;
+                            vec.back().first +=itr.capacity;
                             continue;
                         }
                         else {
-                            vec.push_back(itr.capacity);
+                            vec.emplace_back(itr.capacity, itr.duration);
                             breaker = true;
                         }
                     }
                 }
-                if(!breaker) vec.push_back(0);
+                if(!breaker) vec.emplace_back(0,0);
             }
             flowGraph.push_back(vec);
         }
@@ -445,16 +451,19 @@ void App::edmondsKarp(int origin, int destination, int size, bool augmentation, 
 
         for (v = destination; v != origin; v = auxParent[v]) {
             u = auxParent[v];
-            path_flow = min(path_flow, flowGraph[u][v]);
+            path_flow = min(path_flow, flowGraph[u][v].first);
         }
         for (v = destination; v != origin; v = auxParent[v]) {
             u = auxParent[v];
-            flowGraph[u][v] -= path_flow;
-            flowGraph[v][u] += path_flow;
-            if(pathsMap.first.find(make_pair(u, v)) == pathsMap.first.end())
+            flowGraph[u][v].first -= path_flow;
+            flowGraph[v][u].first += path_flow;
+            if(pathsMap.first.find(make_pair(u, v)) == pathsMap.first.end()) {
                 pathsMap.first.insert(pair<pair<int,int>, int> (make_pair(u, v), path_flow));
-            else
+                auxGraph.addEdge(u,v, 1, flowGraph[u][v].second);
+            }
+            else {
                 pathsMap.first.find(make_pair(u, v))->second += path_flow;
+            }
         }
         pathsMap.second += path_flow;
         if(findMax);
@@ -467,6 +476,7 @@ void App::edmondsKarp(int origin, int destination, int size, bool augmentation, 
         lastPathInfo = make_tuple(origin, destination, pathsMap.second); // Update lastPathInfo with new data
     }
 
+    return auxGraph;
 }
 
 /// 2.1 DONE HERE
@@ -522,4 +532,95 @@ int App::scenery2_3(int origin, int destination) {
 
     return 0;
 }
+
+/// 2.4 DONE HERE
+
+int earliestStart(vector<Node> &nodes) {
+    int minDuration = -1;
+    int finalVertex = 0;
+    queue<int> S;
+    for(auto node : nodes) {
+        node.ES = 0;
+        node.parent = 0;
+        node.eDegree = 0;
+    }
+    for(const auto& node : nodes) {
+        for(auto edge : node.adj) {
+            nodes[edge.dest].eDegree +=1;
+        }
+    }
+    for(const auto& node : nodes) {
+        if(node.eDegree == 0) S.push(node.id);
+    }
+
+    while (!S.empty()){
+        int v = S.front();
+        S.pop();
+        if (minDuration < nodes[v].ES){
+            minDuration = nodes[v].ES;
+            finalVertex = v;
+        }
+        for (auto w : nodes[v].adj){
+            if (nodes[w.dest].ES < nodes[v].ES + w.duration){
+                nodes[w.dest].ES = nodes[v].ES + w.duration;
+                nodes[w.dest].parent = v;
+            }
+            nodes[w.dest].eDegree -= 1;
+            if (nodes[w.dest].eDegree == 0)
+                S.push(w.dest);
+        }
+    }
+    cout << "Minimum duration: " << minDuration << endl;
+    return minDuration;
+}
+
+int App::scenery2_4(int origin, int destination, int size) {
+
+    if(origin >= graph.getNodes().size() || destination >= graph.getNodes().size()) return 1;
+    auto aux = edmondsKarp(origin, destination, size, false, false);
+
+    earliestStart(aux.getNodes());
+    return 0;
+}
+
+/// 2.5 DONE HERE
+
+int App::scenery2_5(int origin, int destination, int size) {
+    queue<int> S;
+    edmondsKarp(origin, destination, size, false, false);
+    vector<Node> &nodes = auxGraph.getNodes();
+    int minDuration = earliestStart(nodes);
+    vector<int> stations;
+    //Graph transposed = graph.transpose();
+    vector<int> wait(nodes.size(),0);
+
+    for(int i = 1; i < nodes.size(); i++){
+        for (auto e : nodes[i].adj){
+            int newMax = nodes[e.dest].ES - nodes[i].ES - e.duration;
+            if(wait[e.dest] < newMax)
+                wait[e.dest] = newMax;
+        }
+    }
+    int maxWait = INT_MIN;
+    for(int i : wait){
+        if(maxWait < i) maxWait = i;
+    }
+    for(int i = 1; i <= wait.size(); i++){
+        if(wait[i] == maxWait){
+            stations.push_back(i);
+        }
+    }
+    cout << "Max time people have to wait: " << maxWait << endl;
+    cout << "That happens in " << stations.size() << " stations" << endl;
+    if(!stations.empty()){
+        cout << "Stations nr: ";
+        for(int i : stations)
+            cout << i << " ";
+    }
+    cout << endl;
+
+
+    return 0;
+}
+
 

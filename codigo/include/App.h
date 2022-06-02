@@ -18,11 +18,12 @@ private:
     FileReader fileReader;
     vector<Vehicle> vehicles;
     Graph graph = Graph(true);
-    vector<pair<vector<int>, int>> pathsTaken;
-    pair<map<pair<int,int>, int>, int> pathsMap;
-    vector<vector<int>> flowGraph;
-    vector<int> parent;
-    tuple<int, int, int> lastPathInfo = make_tuple(0,0,0);
+    Graph auxGraph; // for 2.4/2.5
+    vector<pair<vector<int>, int>> pathsTaken; // for 1.1/1.2
+    pair<map<pair<int,int>, int>, int> pathsMap; // for 2.1-2.5
+    vector<vector<pair<int,int>>> flowGraph; // for 2.1-2.5
+    vector<int> parent; // for 2.1-2.5
+    tuple<int, int, int> lastPathInfo = make_tuple(0,0,0); // for 2.1-2.5
 
 public:
 
@@ -73,11 +74,11 @@ public:
     vector<pair<vector<int>, int>> scenery1_2(int origin, int destination);
 
 
-        /**
+    /**
      * @brief TBD
      * @return TBD
      */
-    void edmondsKarp(int origin, int destination, int size, bool augmentation, bool findMax);
+     Graph edmondsKarp(int origin, int destination, int size, bool augmentation, bool findMax);
 
     /**
      * @brief TBD
@@ -102,6 +103,22 @@ public:
      * @return TBD
      */
     int scenery2_3(int origin, int destination);
+
+    /**
+     * @brief TBD
+     * @param origin Origin point
+     * @param destination Destination Point
+     * @return TBD
+     */
+    int scenery2_4(int origin, int destination, int size);
+
+    /**
+     * @brief TBD
+     * @param origin Origin point
+     * @param destination Destination Point
+     * @return TBD
+     */
+    int scenery2_5(int origin, int destination, int size);
 
 };
 

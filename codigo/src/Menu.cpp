@@ -230,7 +230,9 @@ void Scenery2::display() {
     cout << "1 - Option 2.1" << endl;
     cout << "2 - Option 2.2" << endl;
     cout << "3 - Option 2.3" << endl;
-    cout << "4 - Print Path taken" << endl;
+    cout << "4 - Option 2.4" << endl;
+    cout << "5 - Option 2.5" << endl;
+    cout << "6 - Print Path taken" << endl;
     cout << "0 - Exit" << endl;
     cout << endl;
 }
@@ -246,8 +248,16 @@ Menu *Scenery2::nextMenu() {
         case 3: {
             return new Func2_3(app);
         }
-
         case 4: {
+            app.scenery2_4(1, 50, 100);
+            return this;
+        }
+        case 5: {
+            app.scenery2_5(1, 50, 100);
+            return this;
+        }
+
+        case 6: {
             app.printPaths(2);
             return this;
         }
@@ -357,5 +367,29 @@ Menu *Func2_3::nextMenu() {
 
     auto ret = app.scenery2_3(ori, dest);
     cout << endl;
+    return nullptr;
+}
+
+Func2_4::Func2_4(App &app) : Menu(app) {
+
+}
+
+void Func2_4::display() {
+
+}
+
+Menu *Func2_4::nextMenu() {
+    return nullptr;
+}
+
+Func2_5::Func2_5(App &app) : Menu(app) {
+
+}
+
+void Func2_5::display() {
+
+}
+
+Menu *Func2_5::nextMenu() {
     return nullptr;
 }

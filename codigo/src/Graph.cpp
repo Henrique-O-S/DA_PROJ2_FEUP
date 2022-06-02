@@ -51,7 +51,6 @@ ostream &operator<<(ostream &os, const Graph &g) {
     return os;
 }
 
-/// TODO Make this func also consider duration sum
 pair<int, int> Graph::tripCapacity(vector<int> path) {
     int capacity = INT_MAX/2;
     int size = 0;

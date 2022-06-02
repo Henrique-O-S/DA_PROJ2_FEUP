@@ -17,6 +17,9 @@ struct Node {
     std::vector<Edge> adj;
     std::vector<Edge> adjBack;
     int id;
+    int ES;
+    int parent;
+    int eDegree;
 };
 
 #endif //DA_PROJ2_FEUP_STRUCTS_H

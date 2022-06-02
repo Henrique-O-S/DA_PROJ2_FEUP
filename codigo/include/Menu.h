@@ -110,4 +110,18 @@ public:
     Menu *nextMenu() override;
 };
 
+class Func2_4: public Menu{
+public:
+    explicit Func2_4(App &app);
+    void display() override;
+    Menu *nextMenu() override;
+};
+
+class Func2_5: public Menu{
+public:
+    explicit Func2_5(App &app);
+    void display() override;
+    Menu *nextMenu() override;
+};
+
 #endif //DA_PROJ2_FEUP_MENU_H

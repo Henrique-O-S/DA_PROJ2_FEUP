@@ -114,24 +114,22 @@ void App::optimalPaths() {
 
 /// TODO probably change graph to a hashmap, time is gonna hurt bad
 
-// Function to return the maximum weight
-// in the widest path of the given graph
-pair<vector<int>, int> widest_path_problem(vector<Node> nodes, int src, int target)
+pair<vector<int>, int> maxCapacityProblem(vector<Node> nodes, int src, int target)
 {
-    // To keep track of widest distance
-    vector<int> widest(nodes.size(), INT_MIN/2);
+    // To keep track of the largest capacity
+    vector<int> largest(nodes.size(), INT_MIN / 2);
 
     // To get the path at the end of the algorithm
     vector<int> parent(nodes.size(), 0);
 
-    // Use of Minimum Priority Queue to keep track minimum
-    // widest distance vertex so far in the algorithm
+    // Use of Minimum Priority Queue to keep track of the
+    // largest capacity vertex so far in the algorithm
     priority_queue<pair<int, int>, vector<pair<int, int> >,
     greater<pair<int, int> > > container;
 
     container.push(make_pair(0, src));
 
-    widest[src] = INT_MAX/2;
+    largest[src] = INT_MAX / 2;
 
     while (!container.empty()) {
         pair<int, int> temp = container.top();
@@ -142,23 +140,13 @@ pair<vector<int>, int> widest_path_problem(vector<Node> nodes, int src, int targ
 
         for (auto vertex : nodes[current_src].adj) {
 
-            // Finding the widest distance to the vertex
-            // using current_source vertex's widest distance
-            // and its widest distance so far
-            int distance = max(widest[vertex.dest],
-                               min(widest[vertex.origin], vertex.capacity));
-            /// TODO for first iteration, save max "i" obtained, then try to find lower values with the remaining arestas
+            int capacity = max(largest[vertex.dest],
+                               min(largest[vertex.origin], vertex.capacity));
 
-            // Relaxation of edge and adding into Priority Queue
-            if (distance > widest[vertex.dest]) {
-                // Updating bottle-neck distance
-                widest[vertex.dest] = distance;
-
-                // To keep track of parent
+            if (capacity > largest[vertex.dest]) {
+                largest[vertex.dest] = capacity;
                 parent[vertex.dest] = current_src;
-
-                // Adding the relaxed edge in the priority queue
-                container.push(make_pair(distance, vertex.dest));
+                container.push(make_pair(capacity, vertex.dest));
             }
         }
     }
@@ -172,88 +160,14 @@ pair<vector<int>, int> widest_path_problem(vector<Node> nodes, int src, int targ
         vertex = parent[vertex];
     }
     reverse(ret.begin(), ret.end());
-    return make_pair(ret, widest[target]);
-}
-
-// To print the shortest path stored in parent[]
-int printShortestPath(int parent[], int s, int d, int V)
-{
-    static int level = 0;
-
-    // If we reached root of shortest path tree
-    if (parent[s] == -1)
-    {
-        cout << "Shortest Path between " << s << " and "
-             << d << " is "  << s << " ";
-        return level;
-    }
-
-    printShortestPath(parent, parent[s], d, V);
-
-    level++;
-    if (s < V)
-        cout << s << " ";
-
-    return level;
-}
-
-// This function mainly does BFS and prints the
-// shortest path from src to dest. It is assumed
-// that weight of every edge is 1
-pair<vector<int>, int> findShortestPath(vector<Node> nodes,int src, int dest)
-{
-    // Mark all the vertices as not visited
-    bool *visited = new bool[2*nodes.size()];
-    int *parent = new int[2*nodes.size()];
-
-    // Initialize parent[] and visited[]
-    for (int i = 0; i < 2*nodes.size(); i++) {
-        visited[i] = false;
-        parent[i] = -1;
-    }
-
-    // Create a queue for BFS
-    list<int> queue;
-
-    // Mark the current node as visited and enqueue it
-    visited[src] = true;
-    queue.push_back(src);
-    int capacity = 5;
-
-    // 'i' will be used to get all adjacent vertices of a vertex
-    list<int>::iterator i;
-
-    while (!queue.empty())
-    {
-        // Dequeue a vertex from queue and print it
-        int s = queue.front();
-        vector<int> ret;
-        if (s == dest)
-            return make_pair( ret ,printShortestPath(parent, s, dest, nodes.size()));
-
-        queue.pop_front();
-
-        // Get all adjacent vertices of the dequeued vertex s
-        // If a adjacent has not been visited, then mark it
-        // visited and enqueue it
-        for (auto itr : nodes[s].adj)
-        { /// TODO CHECK FOR CAPACITY, TRY TO DO BOTTOM-UP (FROM DEST TO ORIGIN)
-            int cap = itr.capacity;
-            if (!visited[itr.dest])
-            {
-                visited[itr.dest] = true;
-                queue.push_back(itr.dest);
-                parent[itr.dest] = s;
-            }
-        }
-    }
+    return make_pair(ret, largest[target]);
 }
 
 pair<vector<int>, int> App::scenery1_1(int origin, int destination) {
     pair<vector<int>, int> ret;
     if(origin == 0 || destination == 0) return ret;
     //auto au = findShortestPath(graph.getNodes(), origin, destination);
-    auto aux = widest_path_problem(graph.getNodes(), origin, destination);
+    auto aux = maxCapacityProblem(graph.getNodes(), origin, destination);
     if(aux.second == INT_MIN/2) return ret;
     return aux;
 }
@@ -404,7 +318,7 @@ vector<pair<vector<int>, int>> App::scenery1_2(int origin, int destination) {
     if(origin <= 0 || origin > graph.getNodes().size() ||destination <= 0 || destination > graph.getNodes().size()) {
         return ret;
     }
-    auto aux = widest_path_problem(graph.getNodes(), origin, destination);
+    auto aux = maxCapacityProblem(graph.getNodes(), origin, destination);
     if(aux.second == INT_MIN/2) {
         cout << "FAILED"<< endl;
         return ret;

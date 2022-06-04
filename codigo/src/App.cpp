@@ -6,7 +6,7 @@
 App::App() = default;
 
 void App::loadData(){ ///TODO assert max that origin is > 0 and end is < n
-    auto ret = fileReader.getVehicleFromFiles(filepath + "in01_b.txt");
+    auto ret = fileReader.getVehicleFromFiles(filepath + "in03_b.txt");
     if(ret.second == -1) {
         cout << "Loading data failed";
         return;
@@ -601,7 +601,7 @@ int App::scenery2_5(int origin, int destination, int size) {
         }
     }
     int maxWait = INT_MIN;
-    for(int i : wait){
+    for(auto i : wait){
         if(maxWait < i) maxWait = i;
     }
     for(int i = 1; i <= wait.size(); i++){

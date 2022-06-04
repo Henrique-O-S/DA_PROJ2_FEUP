@@ -77,14 +77,14 @@ public:
      * @param destination Destination Point
      * @return TBD
      */
-    vector<pair<vector<int>, int>> scenery1_2(int origin, int destination);
+    int scenery1_2(int origin, int destination);
 
 
     /**
      * @brief TBD
      * @return TBD
      */
-     Graph edmondsKarp(int origin, int destination, int size, bool augmentation, bool findMax);
+     Graph edmondsKarp(int origin, int destination, int size, pair<bool,bool> augmentation, bool findMax);
 
     /**
      * @brief TBD

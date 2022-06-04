@@ -47,8 +47,8 @@ MainMenu::MainMenu(App &app): Menu(app){}
 void MainMenu::display(){
     cout << endl;
     cout << "Main Menu:" << endl;
-    cout << "1 - Scenery 1" << endl;
-    cout << "2 - Scenery 2" << endl;
+    cout << "1 - Scenery 1 : Groups that stick together" << endl;
+    cout << "2 - Scenery 2 : Groups that can split" << endl;
     cout << "3 - Instructions" << endl;
     cout << "0 - Exit" << endl;
     cout << endl;
@@ -90,8 +90,8 @@ Scenery1::Scenery1(App &app) : Menu(app) {
 void Scenery1::display() {
     cout << endl;
     cout << "Options Menu:" << endl;
-    cout << "1 - Non separable groups" << endl;
-    cout << "2 - 1.2 func" << endl;
+    cout << "1 - Maximize group dimension" << endl;
+    cout << "2 - Maximize group dimension while minimizing transhipment" << endl;
     cout << "3 - Print Vehicles" << endl;
     cout << "4 - Print Path" << endl;
     cout << "0 - Exit" << endl;
@@ -137,8 +137,6 @@ bool isNumber(const string& str) {
     }
     return true;
 }
-
-
 
 Menu *Func1_1::nextMenu() {
     stringstream so(readStr());
@@ -208,8 +206,8 @@ Menu *Func1_2::nextMenu() {
         return this;
     }
 
-    auto ret = app.scenery1_2(ori, dest);
-    if(ret.empty()) {
+    int ret = app.scenery1_2(ori, dest);
+    if(ret != 0) {
         cout << "There are no possible paths from '"<<ori << "' to '" << dest << "'!"<<endl;
         return this;
     }
@@ -227,11 +225,11 @@ Scenery2::Scenery2(App &app) : Menu(app) {
 void Scenery2::display() {
     cout << endl;
     cout << "Options Menu:" << endl;
-    cout << "1 - Option 2.1" << endl;
-    cout << "2 - Option 2.2" << endl;
-    cout << "3 - Option 2.3" << endl;
-    cout << "4 - Option 2.4" << endl;
-    cout << "5 - Option 2.5" << endl;
+    cout << "1 - Find a Path to follow for a given a group dimension" << endl;
+    cout << "2 - Augment group dimension of the last Trip" << endl;
+    cout << "3 - Maximize group dimension" << endl;
+    cout << "4 - When would the group would reunite" << endl;
+    cout << "5 - Maximum wait time between elements of the group" << endl;
     cout << "6 - Print Path taken" << endl;
     cout << "0 - Exit" << endl;
     cout << endl;
@@ -249,12 +247,10 @@ Menu *Scenery2::nextMenu() {
             return new Func2_3(app);
         }
         case 4: {
-            app.scenery2_4(1, 4, 100);
-            return this;
+            return new Func2_4(app);
         }
         case 5: {
-            app.scenery2_5(1, 4, 100);
-            return this;
+            return new Func2_5(app);
         }
 
         case 6: {
@@ -365,7 +361,7 @@ Menu *Func2_3::nextMenu() {
         return this;
     }
 
-    auto ret = app.scenery2_3(ori, dest);
+    int ret = app.scenery2_3(ori, dest);
     cout << endl;
     return nullptr;
 }
@@ -375,10 +371,37 @@ Func2_4::Func2_4(App &app) : Menu(app) {
 }
 
 void Func2_4::display() {
-
+    cout << endl;
+    cout << "==============================="<<endl;
+    cout << "Q - Exit" << endl << endl;
+    cout << "Input:\n<Origin> <Destination> <Capacity>";
 }
 
 Menu *Func2_4::nextMenu() {
+    stringstream so(readStr());
+    string origin, destination, capacity;
+    so >> origin;
+    if(origin.find('q') != string::npos || origin.find('Q') != string::npos)
+        return nullptr;
+    so >> destination;
+    so >> capacity;
+    if(!isNumber(origin) || !isNumber(destination) || !isNumber(capacity))
+        return invalidInput();
+    int ori, dest, cpcity;
+    ori = stoi(origin);
+    dest = stoi(destination);
+    cpcity = stoi(capacity);
+    if(ori == dest) {
+        cout << "Origin and Destination point are the same:"<<ori << "=" << dest << endl;
+        return this;
+    }
+    if(cpcity <= 0) {
+        cout << "Insert a capacity above 0."<< endl;
+        return this;
+    }
+    cout << endl;
+    auto ret = app.scenery2_4(ori, dest, cpcity);
+    cout << endl;
     return nullptr;
 }
 
@@ -387,9 +410,36 @@ Func2_5::Func2_5(App &app) : Menu(app) {
 }
 
 void Func2_5::display() {
-
+    cout << endl;
+    cout << "==============================="<<endl;
+    cout << "Q - Exit" << endl << endl;
+    cout << "Input:\n<Origin> <Destination> <Capacity>";
 }
 
 Menu *Func2_5::nextMenu() {
+    stringstream so(readStr());
+    string origin, destination, capacity;
+    so >> origin;
+    if(origin.find('q') != string::npos || origin.find('Q') != string::npos)
+        return nullptr;
+    so >> destination;
+    so >> capacity;
+    if(!isNumber(origin) || !isNumber(destination) || !isNumber(capacity))
+        return invalidInput();
+    int ori, dest, cpcity;
+    ori = stoi(origin);
+    dest = stoi(destination);
+    cpcity = stoi(capacity);
+    if(ori == dest) {
+        cout << "Origin and Destination point are the same:"<<ori << "=" << dest << endl;
+        return this;
+    }
+    if(cpcity <= 0) {
+        cout << "Insert a capacity above 0."<< endl;
+        return this;
+    }
+    cout << endl;
+    auto ret = app.scenery2_5(ori, dest, cpcity);
+    cout << endl;
     return nullptr;
 }

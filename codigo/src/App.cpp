@@ -6,7 +6,7 @@
 App::App() = default;
 
 void App::loadData(){ ///TODO assert max that origin is > 0 and end is < n
-    auto ret = fileReader.getVehicleFromFiles(filepath + "in03_b.txt");
+    auto ret = fileReader.getVehicleFromFiles(filepath + "in01_b.txt");
     if(ret.second == -1) {
         cout << "Loading data failed. Make sure you inserted the correct text file";
         return;
@@ -110,10 +110,6 @@ void App::optimalPaths() {
 
 //Scenery 1
 
-/********************* 1.1 DONE HERE *********************/
-
-/// TODO probably change graph to a hashmap, time is gonna hurt bad
-
 pair<vector<int>, int> maxCapacityProblem(vector<Node> nodes, int src, int target)
 {
     // To keep track of the largest capacity
@@ -163,6 +159,8 @@ pair<vector<int>, int> maxCapacityProblem(vector<Node> nodes, int src, int targe
     return make_pair(ret, largest[target]);
 }
 
+/// 1.1 DONE HERE
+
 pair<vector<int>, int> App::scenery1_1(int origin, int destination) {
     pair<vector<int>, int> ret;
     if(origin == 0 || destination == 0) return ret;
@@ -171,8 +169,6 @@ pair<vector<int>, int> App::scenery1_1(int origin, int destination) {
     if(aux.second == INT_MIN/2) return ret;
     return aux;
 }
-
-/********************* 1.2 DONE HERE *********************/
 
 bool bfs(vector<vector<pair<int, int>>> flowGraph, int origin, int destination, int parent[], int nodeSize)
 {
@@ -201,7 +197,6 @@ bool bfs(vector<vector<pair<int, int>>> flowGraph, int origin, int destination, 
             }
         }
     }
-    // We didn'destination reach the destination so we return false
     return false;
 }
 
@@ -238,22 +233,14 @@ void App::edmondsKarp1_2(int origin, int destination) {
 
 
     int parent[V]; // This array is filled by BFS and to
-    // store path
 
-    int max_flow = 0; // There is no flow initially
-
-    // Augment the flow while there is path from source to
-    // sink
     while (bfs(rGraph, origin, destination, parent, V)) {
-        // Find minimum residual capacity of the edges along
-        // the path filled by BFS. Or we can say find the
-        // maximum flow through the path found.
+
         int path_flow = INT_MAX;
         for (v = destination; v != origin; v = parent[v]) {
             u = parent[v];
             path_flow = min(path_flow, rGraph[u][v].first);
         }
-
 
         pair<vector<int>, int> auxPath;
         auxPath.second = INT_MAX/2;
@@ -262,234 +249,44 @@ void App::edmondsKarp1_2(int origin, int destination) {
             u = parent[v];
             rGraph[u][v].first -= path_flow;
             rGraph[v][u].first += path_flow;
-            if(rGraph[u][v].second < auxPath.second) auxPath.second = rGraph[u][v].second;
+            auxPath.second = min(auxPath.second, rGraph[u][v].second);
             auxPath.first.push_back(u);
         }
-
-        for(auto i: auxPath.first) {
-            cout << i << " ";
-        }
-        cout << "-" << auxPath.second << ":" << auxPath.first.size() << endl;
-
-        // Add path flow to overall flow
-        max_flow += path_flow;
-    }
-
-    // Return the overall flow
-    //return max_flow;
-}
-
-// A recursive function to print all paths from 'u' to 'd'.
-// visited[] keeps track of vertices in current path.
-// path[] stores actual vertices and path_index is current
-// index in path[]
-void printAllPathsUtil(vector<vector<int>> &paths, vector<Node> nodes, int u, int d, bool visited[],
-                              int path[], int& path_index, int max_size)
-{
-    // Mark the current node and store it in path[]
-    if(visited[u]) return;
-    visited[u] = true;
-    path[path_index] = u;
-    path_index++;
-
-    if(path_index > max_size) {
-        path_index--;
-        visited[u] = false;
-        return;
-    }
-
-    // If current vertex is same as destination, then save
-    // current path[]
-    if (u == d) {
-
-        if(paths.empty());
-        /* else if(path_index > paths.end()->size()) {
-            path_index--;
-            visited[u] = false;
-            return;
-        } */
-
-        vector<int> aux;
-        aux.reserve(path_index);
-        for (int i = 0; i < path_index; i++) {
-            aux.push_back(path[i]);
-        }
-        if(paths.empty()) {
-            paths.push_back(aux);
-        }
-        else if(aux == paths.back())
-            ;
-        else paths.push_back(aux);
-
-    }
-    else // If current vertex is not destination
-    {
-        // Recur for all the vertices adjacent to current vertex
-        for (auto edge : nodes[u].adj)
-            if (!visited[edge.dest]) {
-                printAllPathsUtil(paths, nodes, edge.dest, d, visited, path, path_index, max_size);
-            }
-    }
-
-    // Remove current vertex from path[] and mark it as unvisited
-    path_index--;
-    visited[u] = false;
-}
-
-// Prints all paths from 's' to 'd'
-void printAllPaths(vector<vector<int>> &paths, const vector<Node>& nodes, int s, int d, int max_size)
-{
-    int V = nodes.size();
-    // Mark all the vertices as not visited
-    bool* visited = new bool[V];
-
-    // Create an array to store paths
-    int* path = new int[V];
-    int path_index = 0; // Initialize path[] as empty
-
-    // Initialize all vertices as not visited
-    for (int i = 0; i < V; i++)
-        visited[i] = false;
-
-    // Call the recursive helper function to print all paths
-    printAllPathsUtil(paths, nodes, s, d, visited, path, path_index, max_size);
-}
-
-///////////////////////////////////////////
-
-// utility function for printing
-// the found path in graph
-void printpath(vector<int>& path)
-{
-    int size = path.size();
-    for (int i = 0; i < size; i++)
-        cout << path[i] << " ";
-    cout << endl;
-}
-
-// utility function to check if current
-// vertex is already present in path
-int isNotVisited(int x, vector<int>& path)
-{
-    int size = path.size();
-    for (int i = 0; i < size; i++)
-        if (path[i] == x)
-            return 0;
-    return 1;
-}
-
-// utility function for finding paths in graph
-// from source to destination
-void findpaths(vector<Node> nodes, int src,
-               int dst, int v)
-{
-    // create a queue which stores
-    // the paths
-    queue<vector<int> > q;
-
-    // path vector to store the current path
-    vector<int> path;
-    path.push_back(src);
-    q.push(path);
-    while (!q.empty()) {
-        path = q.front();
-        q.pop();
-        int last = path[path.size() - 1];
-
-        // if last vertex is the desired destination
-        // then print the path
-        if (last == dst)
-            printpath(path);
-
-        // traverse to all the nodes connected to
-        // current vertex and push new path to queue
-        for (auto vertex : nodes[last].adj) {
-            if (isNotVisited(vertex.dest, path)) {
-                vector<int> newpath(path);
-                newpath.push_back(vertex.dest);
-                q.push(newpath);
-            }
-        }
+        reverse(auxPath.first.begin(), auxPath.first.end());
+        pathsTaken.emplace_back(auxPath);
     }
 }
 
 /// 1.2 DONE HERE
-/// TODO Use EdmondKarp algorithm to find all the paths
-vector<pair<vector<int>, int>> App::scenery1_2(int origin, int destination) {
+
+int App::scenery1_2(int origin, int destination) {
     pathsTaken.clear();
     vector<vector<int>> paths;
-    vector<pair<vector<int>, int>> ret;
     edmondsKarp1_2(origin, destination);
     if(origin <= 0 || origin > graph.getNodes().size() ||destination <= 0 || destination > graph.getNodes().size()) {
-        return ret;
+        return 1;
     }
     auto aux = maxCapacityProblem(graph.getNodes(), origin, destination);
-    if(aux.second == INT_MIN/2) {
-        cout << "FAILED"<< endl;
-        return ret;
-    }
-    printAllPaths(paths, graph.getNodes(), origin, destination, aux.first.size() - 1);
-
-    paths.emplace_back(aux.first);
-
-
-     // TO PRINT EVERYTHING
-    for(const auto& path : paths) {
-        auto capacity = graph.tripCapacity(path);
-        ret.emplace_back(path, capacity.first);
-    }
-
-    /*
-    vector<int> capacityVec;
-    for(const auto& path : paths) { // for each obtained path
-        bool add = false;
-        auto capacity = graph.tripCapacity(path);
-        bool notInCapacityVec = true;
-        for(auto c : capacityVec) { // checks diff capacities
-            if(capacity.first == c) { // path capacity == existing capacity?
-                notInCapacityVec = false;
-                int i = 0;
-                for(auto r : ret) {
-                    if(r.second == capacity.first) {
-                        if(r.first.size() > capacity.second) { // compares length from ret
-                            add = true;
-                            ret.erase(ret.begin() + i);
-                            break;
-                        }
-                    }
-                    i++;
-                }
-                break;
-            }
-        }
-        if(notInCapacityVec)  {
-            capacityVec.push_back(capacity.first); // push back non-existing capacity
-            ret.emplace_back(path, capacity.first);
-            continue;
-        }
-        if(add) ;
-            ret.emplace_back(path, capacity.first);
-    } */
-
-    pathsTaken = ret;
+    pathsTaken.emplace_back(aux);
     sortPaths();
     optimalPaths();
-    return ret;
+    if(pathsTaken.empty()) return 1;
+    return 0;
 }
 
 //Scenery 2
 
-Graph App::edmondsKarp(int origin, int destination, int size, bool augmentation, bool findMax) {
+Graph App::edmondsKarp(int origin, int destination, int size, pair<bool,bool> augmentation, bool findMax) {
 
-    if(get<0>(lastPathInfo) == origin && get<1>(lastPathInfo) == destination) {
-        augmentation = true;
+    if(get<0>(lastPathInfo) == origin && get<1>(lastPathInfo) == destination && !augmentation.second) {
+        augmentation.first = true;
     }
 
     vector<Node> nodes = graph.getNodes();
     lastPathInfo = make_tuple(origin, destination, size); // Update lastPathInfo with new data
     int u, v, nodeSize = nodes.size();
     int auxParent[nodeSize];
-    if(!augmentation) {
+    if(!augmentation.first) {
         auxGraph = Graph(true);
         if(!flowGraph.empty()) flowGraph.clear();
         for (u = 0; u < nodeSize; u++) {
@@ -559,7 +356,7 @@ Graph App::edmondsKarp(int origin, int destination, int size, bool augmentation,
 
 int App::scenery2_1(int origin, int destination, int size){
     if(origin >= graph.getNodes().size() || destination >= graph.getNodes().size()) return 1;
-    edmondsKarp(origin, destination, size, false, false);
+    edmondsKarp(origin, destination, size, make_pair(false,false), false);
     if(pathsMap.second < size) {
         cout << "The size of the group exceeds the maximum possible capacity for the trip ["<<origin<<"] - ["
         << destination <<"] which is: "<<  pathsMap.second  << endl;
@@ -585,7 +382,7 @@ int App::scenery2_2(unsigned augmentation){
         printPaths(2);
         return 0;
     }
-    edmondsKarp(origin, destination, (size + augmentation), true, false);
+    edmondsKarp(origin, destination, (size + augmentation), make_pair(false,true), false);
     if(pathsMap.second < get<2>(lastPathInfo)) {
         cout << "The size of the group exceeds the maximum possible capacity for the trip ["<<origin
                 <<"] - [" << destination <<"] which is: "<<  pathsMap.second << " < " << get<2>(lastPathInfo) << endl;
@@ -601,8 +398,8 @@ int App::scenery2_2(unsigned augmentation){
 /// 2.3 DONE HERE
 
 int App::scenery2_3(int origin, int destination) {
-    if(origin >= graph.getNodes().size() || destination >= graph.getNodes().size()) return 0;
-    edmondsKarp(origin, destination, -1, false, true);
+    if(origin >= graph.getNodes().size() || destination >= graph.getNodes().size()) return 1;
+    edmondsKarp(origin, destination, -1, make_pair(false,false), true);
     cout << "The maximum capacity for the trip ["<<origin<<"] - [" << destination <<"] is: "
          <<  pathsMap.second << endl;
 
@@ -613,7 +410,6 @@ int App::scenery2_3(int origin, int destination) {
 
 int earliestStart(vector<Node> &nodes) {
     int minDuration = -1;
-    int finalVertex = 0;
     queue<int> S;
     for(auto node : nodes) {
         node.ES = 0;
@@ -634,7 +430,6 @@ int earliestStart(vector<Node> &nodes) {
         S.pop();
         if (minDuration < nodes[v].ES){
             minDuration = nodes[v].ES;
-            finalVertex = v;
         }
         for (auto w : nodes[v].adj){
             if (nodes[w.dest].ES < nodes[v].ES + w.duration){
@@ -646,14 +441,14 @@ int earliestStart(vector<Node> &nodes) {
                 S.push(w.dest);
         }
     }
-    cout << "Minimum duration: " << minDuration << endl;
+    cout << "The group would reunite at the destination after: " << minDuration <<"h"<< endl;
     return minDuration;
 }
 
 int App::scenery2_4(int origin, int destination, int size) {
 
     if(origin >= graph.getNodes().size() || destination >= graph.getNodes().size()) return 1;
-    edmondsKarp(origin, destination, size, false, false);
+    edmondsKarp(origin, destination, size, make_pair(false,true), false);
 
     earliestStart(auxGraph.getNodes());
     return 0;
@@ -663,39 +458,37 @@ int App::scenery2_4(int origin, int destination, int size) {
 
 int App::scenery2_5(int origin, int destination, int size) {
     if(origin >= graph.getNodes().size() || destination >= graph.getNodes().size()) return 1;
-    queue<int> S;
-    edmondsKarp(origin, destination, size, false, false);
+
+    edmondsKarp(origin, destination, size, make_pair(false,true), false);
     vector<Node> &nodes = auxGraph.getNodes();
     earliestStart(nodes);
-    vector<int> stops;
+
+    vector<int> stations;
     vector<int> wait(nodes.size(),0);
 
     for(int i = 1; i < nodes.size(); i++){
-        for (auto e : nodes[i].adj){
-            int newMax = nodes[e.dest].ES - nodes[i].ES - e.duration;
-            if(wait[e.dest] < newMax)
-                wait[e.dest] = newMax;
+        for (auto edge : nodes[i].adj){
+            int maximumDur = nodes[edge.dest].ES - nodes[i].ES - edge.duration;
+            wait[edge.dest] = max(wait[edge.dest], maximumDur);
         }
     }
     int maxWait = INT_MIN;
     for(auto i : wait){
-        if(maxWait < i) maxWait = i;
+        maxWait = max(maxWait, i);
     }
     for(int i = 1; i <= wait.size(); i++){
         if(wait[i] == maxWait){
-            stops.push_back(i);
+            stations.push_back(i);
         }
     }
-    /// TODO CHANGE THIS
-    cout << "Max time people have to wait: " << maxWait << endl;
-    cout << "That happens in " << stops.size() << " stops" << endl;
-    if(!stops.empty()){
-        cout << "Stops number: ";
-        for(int i : stops)
+
+    cout << "The maximum time a element(s) of the group would have to wait is: " << maxWait <<"h"<<endl;
+    cout << "That would happen in " << stations.size() << " stations" << endl;
+    if(!stations.empty()){
+        cout << "Station(s) ID(s): ";
+        for(int i : stations)
             cout << i << " ";
     }
-    cout << endl;
-
 
     return 0;
 }

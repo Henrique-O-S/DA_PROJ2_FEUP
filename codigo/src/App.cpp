@@ -6,9 +6,9 @@
 App::App() = default;
 
 void App::loadData(){ ///TODO assert max that origin is > 0 and end is < n
-    auto ret = fileReader.getVehicleFromFiles(filepath + "in01_b.txt");
+    auto ret = fileReader.getVehicleFromFiles(filepath + "in03_b.txt");
     if(ret.second == -1) {
-        cout << "Loading data failed";
+        cout << "Loading data failed. Make sure you inserted the correct text file";
         return;
     }
     for(int i = 1; i <= ret.second; i++){
@@ -174,6 +174,111 @@ pair<vector<int>, int> App::scenery1_1(int origin, int destination) {
 
 /********************* 1.2 DONE HERE *********************/
 
+bool bfs(vector<vector<pair<int, int>>> flowGraph, int origin, int destination, int parent[], int nodeSize)
+{
+    bool visited[nodeSize];
+    memset(visited, 0, sizeof(visited));
+
+    queue<int> q;
+    q.push(origin);
+    visited[origin] = true;
+    parent[origin] = -1;
+
+    // Standard bfs loop
+    while (!q.empty()) {
+        int u = q.front();
+        q.pop();
+
+        for (int v = 0; v < nodeSize; v++) {
+            if (visited[v] == false && flowGraph[u][v].first > 0) {
+                if (v == destination) {
+                    parent[v] = u;
+                    return true;
+                }
+                q.push(v);
+                parent[v] = u;
+                visited[v] = true;
+            }
+        }
+    }
+    // We didn'destination reach the destination so we return false
+    return false;
+}
+
+void App::edmondsKarp1_2(int origin, int destination) {
+    int u, v, V;
+    vector<Node> nodes = graph.getNodes();
+    V = nodes.size();
+
+    vector<vector<pair<int, int>>> rGraph; // Residual graph where rGraph[i][j]
+
+    for (u = 0; u < V; u++) {
+        if(u > 0) auxGraph.addNode(u);
+        parent.at(u) = 0;
+        vector<pair<int, int>> vec;
+        for (v = 0; v < V; v++){
+            bool breaker = false;
+            for(auto itr : nodes[u].adj) {
+                if(itr.dest == v) {
+                    if(breaker) {
+                        vec.back().first +=itr.capacity;
+                        vec.back().second +=itr.capacity;
+                        continue;
+                    }
+                    else {
+                        vec.emplace_back(itr.capacity, itr.capacity);
+                        breaker = true;
+                    }
+                }
+            }
+            if(!breaker) vec.emplace_back(0,0);
+        }
+        rGraph.push_back(vec);
+    }
+
+
+    int parent[V]; // This array is filled by BFS and to
+    // store path
+
+    int max_flow = 0; // There is no flow initially
+
+    // Augment the flow while there is path from source to
+    // sink
+    while (bfs(rGraph, origin, destination, parent, V)) {
+        // Find minimum residual capacity of the edges along
+        // the path filled by BFS. Or we can say find the
+        // maximum flow through the path found.
+        int path_flow = INT_MAX;
+        for (v = destination; v != origin; v = parent[v]) {
+            u = parent[v];
+            path_flow = min(path_flow, rGraph[u][v].first);
+        }
+
+
+        pair<vector<int>, int> auxPath;
+        auxPath.second = INT_MAX/2;
+        auxPath.first.push_back(destination);
+        for (v = destination; v != origin; v = parent[v]) {
+            u = parent[v];
+            rGraph[u][v].first -= path_flow;
+            rGraph[v][u].first += path_flow;
+            if(rGraph[u][v].second < auxPath.second) auxPath.second = rGraph[u][v].second;
+            auxPath.first.push_back(u);
+        }
+
+        for(auto i: auxPath.first) {
+            cout << i << " ";
+        }
+        cout << "-" << auxPath.second << ":" << auxPath.first.size() << endl;
+
+        // Add path flow to overall flow
+        max_flow += path_flow;
+    }
+
+    // Return the overall flow
+    //return max_flow;
+}
+
 // A recursive function to print all paths from 'u' to 'd'.
 // visited[] keeps track of vertices in current path.
 // path[] stores actual vertices and path_index is current
@@ -314,6 +419,7 @@ vector<pair<vector<int>, int>> App::scenery1_2(int origin, int destination) {
     pathsTaken.clear();
     vector<vector<int>> paths;
     vector<pair<vector<int>, int>> ret;
+    edmondsKarp1_2(origin, destination);
     if(origin <= 0 || origin > graph.getNodes().size() ||destination <= 0 || destination > graph.getNodes().size()) {
         return ret;
     }
@@ -327,13 +433,13 @@ vector<pair<vector<int>, int>> App::scenery1_2(int origin, int destination) {
     paths.emplace_back(aux.first);
 
 
-    /* // TO PRINT EVERYTHING
+     // TO PRINT EVERYTHING
     for(const auto& path : paths) {
         auto capacity = graph.tripCapacity(path);
         ret.emplace_back(path, capacity.first);
     }
-    */
 
+    /*
     vector<int> capacityVec;
     for(const auto& path : paths) { // for each obtained path
         bool add = false;
@@ -363,7 +469,7 @@ vector<pair<vector<int>, int>> App::scenery1_2(int origin, int destination) {
         }
         if(add) ;
             ret.emplace_back(path, capacity.first);
-    }
+    } */
 
     pathsTaken = ret;
     sortPaths();
@@ -373,36 +479,6 @@ vector<pair<vector<int>, int>> App::scenery1_2(int origin, int destination) {
 
 //Scenery 2
 
-bool bfs(vector<vector<pair<int, int>>> flowGraph, int origin, int destination, int parent[], int nodeSize)
-{
-    bool visited[nodeSize];
-    memset(visited, 0, sizeof(visited));
-
-    queue<int> q;
-    q.push(origin);
-    visited[origin] = true;
-    parent[origin] = -1;
-
-    // Standard bfs loop
-    while (!q.empty()) {
-        int u = q.front();
-        q.pop();
-
-        for (int v = 0; v < nodeSize; v++) {
-            if (visited[v] == false && flowGraph[u][v].first > 0) {
-                if (v == destination) {
-                    parent[v] = u;
-                    return true;
-                }
-                q.push(v);
-                parent[v] = u;
-                visited[v] = true;
-            }
-        }
-    }
-    // We didn'destination reach the destination so we return false
-    return false;
-}
 Graph App::edmondsKarp(int origin, int destination, int size, bool augmentation, bool findMax) {
 
     if(get<0>(lastPathInfo) == origin && get<1>(lastPathInfo) == destination) {
@@ -586,6 +662,7 @@ int App::scenery2_4(int origin, int destination, int size) {
 /// 2.5 DONE HERE
 
 int App::scenery2_5(int origin, int destination, int size) {
+    if(origin >= graph.getNodes().size() || destination >= graph.getNodes().size()) return 1;
     queue<int> S;
     edmondsKarp(origin, destination, size, false, false);
     vector<Node> &nodes = auxGraph.getNodes();

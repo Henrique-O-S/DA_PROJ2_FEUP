@@ -67,6 +67,12 @@ public:
 
     /**
      * @brief TBD
+     * @return TBD
+     */
+    void edmondsKarp1_2(int origin, int destination);
+
+    /**
+     * @brief TBD
      * @param origin Origin point
      * @param destination Destination Point
      * @return TBD

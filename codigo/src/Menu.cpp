@@ -249,11 +249,11 @@ Menu *Scenery2::nextMenu() {
             return new Func2_3(app);
         }
         case 4: {
-            app.scenery2_4(1, 50, 100);
+            app.scenery2_4(1, 4, 100);
             return this;
         }
         case 5: {
-            app.scenery2_5(1, 50, 100);
+            app.scenery2_5(1, 4, 100);
             return this;
         }
 

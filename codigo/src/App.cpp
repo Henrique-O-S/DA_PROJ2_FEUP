@@ -164,7 +164,6 @@ pair<vector<int>, int> maxCapacityProblem(vector<Node> nodes, int src, int targe
 pair<vector<int>, int> App::scenery1_1(int origin, int destination) {
     pair<vector<int>, int> ret;
     if(origin == 0 || destination == 0) return ret;
-    //auto au = findShortestPath(graph.getNodes(), origin, destination);
     auto aux = maxCapacityProblem(graph.getNodes(), origin, destination);
     if(aux.second == INT_MIN/2) return ret;
     return aux;
@@ -232,21 +231,21 @@ void App::edmondsKarp1_2(int origin, int destination) {
     }
 
 
-    int parent[V]; // This array is filled by BFS and to
+    int auxParent[V]; // This array is filled by BFS and to
 
-    while (bfs(rGraph, origin, destination, parent, V)) {
+    while (bfs(rGraph, origin, destination, auxParent, V)) {
 
         int path_flow = INT_MAX;
-        for (v = destination; v != origin; v = parent[v]) {
-            u = parent[v];
+        for (v = destination; v != origin; v = auxParent[v]) {
+            u = auxParent[v];
             path_flow = min(path_flow, rGraph[u][v].first);
         }
 
         pair<vector<int>, int> auxPath;
         auxPath.second = INT_MAX/2;
         auxPath.first.push_back(destination);
-        for (v = destination; v != origin; v = parent[v]) {
-            u = parent[v];
+        for (v = destination; v != origin; v = auxParent[v]) {
+            u = auxParent[v];
             rGraph[u][v].first -= path_flow;
             rGraph[v][u].first += path_flow;
             auxPath.second = min(auxPath.second, rGraph[u][v].second);
@@ -386,6 +385,7 @@ int App::scenery2_2(unsigned augmentation){
     if(pathsMap.second < get<2>(lastPathInfo)) {
         cout << "The size of the group exceeds the maximum possible capacity for the trip ["<<origin
                 <<"] - [" << destination <<"] which is: "<<  pathsMap.second << " < " << get<2>(lastPathInfo) << endl;
+
         lastPathInfo = make_tuple(origin, destination, size);
     } else {
         cout << "The path flow for the trip is:" << endl;
@@ -411,7 +411,7 @@ int App::scenery2_3(int origin, int destination) {
 int earliestStart(vector<Node> &nodes) {
     int minDuration = -1;
     queue<int> S;
-    for(auto node : nodes) {
+    for(auto &node : nodes) {
         node.ES = 0;
         node.parent = 0;
         node.eDegree = 0;
@@ -450,8 +450,7 @@ int App::scenery2_4(int origin, int destination, int size) {
     if(origin >= graph.getNodes().size() || destination >= graph.getNodes().size()) return 1;
     edmondsKarp(origin, destination, size, make_pair(false,true), false);
 
-    earliestStart(auxGraph.getNodes());
-    return 0;
+    return earliestStart(auxGraph.getNodes());
 }
 
 /// 2.5 DONE HERE
@@ -460,15 +459,19 @@ int App::scenery2_5(int origin, int destination, int size) {
     if(origin >= graph.getNodes().size() || destination >= graph.getNodes().size()) return 1;
 
     edmondsKarp(origin, destination, size, make_pair(false,true), false);
+    if(pathsMap.second == 0) {
+        cout << "The path isn't possible" << endl;
+        return 1;
+    }
     vector<Node> &nodes = auxGraph.getNodes();
-    earliestStart(nodes);
+    if(!earliestStart(nodes)) return 1;
 
     vector<int> stations;
     vector<int> wait(nodes.size(),0);
 
     for(int i = 1; i < nodes.size(); i++){
         for (auto edge : nodes[i].adj){
-            int maximumDur = nodes[edge.dest].ES - nodes[i].ES - edge.duration;
+            int maximumDur = nodes[edge.dest].ES - nodes[edge.origin].ES - edge.duration;
             wait[edge.dest] = max(wait[edge.dest], maximumDur);
         }
     }
@@ -476,19 +479,24 @@ int App::scenery2_5(int origin, int destination, int size) {
     for(auto i : wait){
         maxWait = max(maxWait, i);
     }
-    for(int i = 1; i <= wait.size(); i++){
+    for(int i = 1; i < wait.size(); i++){
         if(wait[i] == maxWait){
             stations.push_back(i);
         }
     }
-
+    if(maxWait == 0) {
+        cout << "The group will arrive at destination at the same time" << endl;
+        return 0;
+    }
     cout << "The maximum time a element(s) of the group would have to wait is: " << maxWait <<"h"<<endl;
     cout << "That would happen in " << stations.size() << " stations" << endl;
     if(!stations.empty()){
         cout << "Station(s) ID(s): ";
         for(int i : stations)
             cout << i << " ";
+        cout << endl;
     }
+    cout << endl;
 
     return 0;
 }

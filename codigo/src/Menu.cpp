@@ -1,7 +1,11 @@
 #include "../include/Menu.h"
 
 #include <sstream>
+#include <chrono>
 #include "iostream"
+
+#define DIVIDER 4999
+#define LOOP 3
 
 using namespace std;
 
@@ -55,6 +59,7 @@ void MainMenu::display(){
 }
 
 Menu *MainMenu::nextMenu() {
+    srand(time(0));
     switch (readInt()) {
         case 1: return new Scenery1(app);
         case 2: return new Scenery2(app);
@@ -71,6 +76,14 @@ OptionsMenu::OptionsMenu(App &app) : Menu(app) {
 void OptionsMenu::display() {
     cout << endl;
     cout << "Instructions Menu:" << endl << endl;
+    cout << "* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *" << endl;
+    cout << R"(*   By default, the file "input/in01.txt" will load the Graph                                 *)" << endl;
+    cout << "* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *" << endl;
+    cout << "*   Whenever executing any scenario, by default, the previous Path Vector will be erased.     *" << endl;
+    cout << "*   For scenario 2, if it's given the same origin and destination, by default,                *" << endl;
+    cout << "*   The Path Vector won't be erased, only augmented for the size given                        *" << endl;
+    cout << "* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *" << endl;
+    cout << endl;
     cout << "0 - Exit" << endl;
     cout << endl;
 }
@@ -230,7 +243,8 @@ void Scenery2::display() {
     cout << "3 - Maximize group dimension" << endl;
     cout << "4 - When would the group would reunite" << endl;
     cout << "5 - Maximum wait time between elements of the group" << endl;
-    cout << "6 - Print Path taken" << endl;
+    cout << "6 - Print Vehicles" << endl;
+    cout << "7 - Print Path taken" << endl;
     cout << "0 - Exit" << endl;
     cout << endl;
 }
@@ -252,8 +266,11 @@ Menu *Scenery2::nextMenu() {
         case 5: {
             return new Func2_5(app);
         }
-
         case 6: {
+            app.printGraph();
+            return this;
+        }
+        case 7: {
             app.printPaths(2);
             return this;
         }

@@ -106,6 +106,17 @@ void App::optimalPaths() {
         pathsTaken.erase(pathsTaken.begin()+ i);
 
     reverse(pathsTaken.begin(), pathsTaken.end());
+
+    i = 0;
+    int s = pathsTaken.size();
+    while(s > 1) {
+        s--;
+        if(pathsTaken.at(i).second == pathsTaken.at(i+1).second) {
+            pathsTaken.erase(pathsTaken.begin()+ i);
+            continue;
+        }
+        i++;
+    }
 }
 
 //Scenery 1
@@ -134,15 +145,15 @@ pair<vector<int>, int> maxCapacityProblem(vector<Node> nodes, int src, int targe
 
         container.pop();
 
-        for (auto vertex : nodes[current_src].adj) {
+        for (auto edge : nodes[current_src].adj) {
 
-            int capacity = max(largest[vertex.dest],
-                               min(largest[vertex.origin], vertex.capacity));
+            int capacity = max(largest[edge.dest],
+                               min(largest[edge.origin], edge.capacity));
 
-            if (capacity > largest[vertex.dest]) {
-                largest[vertex.dest] = capacity;
-                parent[vertex.dest] = current_src;
-                container.push(make_pair(capacity, vertex.dest));
+            if (capacity > largest[edge.dest]) {
+                largest[edge.dest] = capacity;
+                parent[edge.dest] = current_src;
+                container.push(make_pair(capacity, edge.dest));
             }
         }
     }
@@ -207,7 +218,6 @@ void App::edmondsKarp1_2(int origin, int destination) {
     vector<vector<pair<int, int>>> rGraph; // Residual graph where rGraph[i][j]
 
     for (u = 0; u < V; u++) {
-        if(u > 0) auxGraph.addNode(u);
         parent.at(u) = 0;
         vector<pair<int, int>> vec;
         for (v = 0; v < V; v++){
@@ -269,6 +279,7 @@ int App::scenery1_2(int origin, int destination) {
     pathsTaken.emplace_back(aux);
     sortPaths();
     optimalPaths();
+
     if(pathsTaken.empty()) return 1;
     return 0;
 }
@@ -344,7 +355,7 @@ Graph App::edmondsKarp(int origin, int destination, int size, pair<bool,bool> au
     for(int i = 1; i < nodeSize; i++) {
         parent.at(i) = auxParent[i];
     }
-    if(findMax) {
+    if(findMax || size > pathsMap.second) {
         lastPathInfo = make_tuple(origin, destination, pathsMap.second); // Update lastPathInfo with new data
     }
 

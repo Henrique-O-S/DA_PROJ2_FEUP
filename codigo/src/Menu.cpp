@@ -78,6 +78,7 @@ void OptionsMenu::display() {
     cout << "Instructions Menu:" << endl << endl;
     cout << "* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *" << endl;
     cout << R"(*   By default, the file "input/in01.txt" will load the Graph                                 *)" << endl;
+    cout << "*   If you wish to change the file, you can change it at App.cpp at function loadData()       *" << endl;
     cout << "* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *" << endl;
     cout << "*   Whenever executing any scenario, by default, the previous Path Vector will be erased.     *" << endl;
     cout << "*   For scenario 2, if it's given the same origin and destination, by default,                *" << endl;

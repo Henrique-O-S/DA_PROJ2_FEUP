@@ -7,7 +7,7 @@ In order to run the program:
 - Build the target directory;
 - Run the program.
 
-Choose the "Instructions" option on the main menu to be prompt with aditional information about the program.
+Choose the "Instructions" option on the main menu to be prompt with additional information about the program.
 
 ## Members:
 Henrique Silva <br/>

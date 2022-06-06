@@ -62,13 +62,20 @@ void App::printPaths(int scenario) {
             }
             break;
         case 2:
-            if(pathsMap.first.empty()) {
+            if(pathsMap.first.empty() || pathsTaken.empty()) {
                 cout << "Path is empty."<<endl;
                 return;
             }
-            cout << "Origin \tDestination\tFlow" << endl;
-            for(auto m : pathsMap.first) {
-                cout << m.first.first << "\t" << m.first.second << "\t\t" << m.second << endl;
+            for(const auto& path : pathsTaken) {
+                cout << "Capacity: "<< path.second << " Path size: " << path.first.size()<<" Path: (";
+                int size = 1;
+                for(auto v : path.first) {
+                    cout << v;
+                    if(size == path.first.size()) break;
+                    cout << ",";
+                    size++;
+                }
+                cout << ")" << endl;
             }
             if(get<2>(lastPathInfo) > 0) {
                 cout << "The current size and capacity of the trip is : " << get<2>(lastPathInfo)
@@ -345,15 +352,20 @@ Graph App::edmondsKarp(int origin, int destination, int size, pair<bool,bool> au
     }
     while (bfs(flowGraph, origin, destination, auxParent, nodeSize)) {
         int path_flow = INT_MAX;
+        pair<vector<int>, int> auxPath;
+        auxPath.second = INT_MAX/2;
+        auxPath.first.push_back(destination);
 
         for (v = destination; v != origin; v = auxParent[v]) {
             u = auxParent[v];
             path_flow = min(path_flow, flowGraph[u][v].first);
         }
+        auxPath.second = path_flow;
         for (v = destination; v != origin; v = auxParent[v]) {
             u = auxParent[v];
             flowGraph[u][v].first -= path_flow;
             flowGraph[v][u].first += path_flow;
+            auxPath.first.push_back(u);
             if(pathsMap.first.find(make_pair(u, v)) == pathsMap.first.end()) {
                 pathsMap.first.insert(pair<pair<int,int>, int> (make_pair(u, v), path_flow));
                 auxGraph.addEdge(u,v, 1, flowGraph[u][v].second);
@@ -362,6 +374,10 @@ Graph App::edmondsKarp(int origin, int destination, int size, pair<bool,bool> au
                 pathsMap.first.find(make_pair(u, v))->second += path_flow;
             }
         }
+
+        reverse(auxPath.first.begin(), auxPath.first.end());
+        pathsTaken.emplace_back(auxPath);
+
         pathsMap.second += path_flow;
         if(findMax);
         else if(pathsMap.second >= size) break;

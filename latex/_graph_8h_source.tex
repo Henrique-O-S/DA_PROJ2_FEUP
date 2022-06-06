@@ -1,0 +1,39 @@
+\hypertarget{_graph_8h_source}{}\doxysection{Graph.\+h}
+\label{_graph_8h_source}\index{codigo/include/Graph.h@{codigo/include/Graph.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef DA\_PROJ2\_FEUP\_GRAPH\_H}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define DA\_PROJ2\_FEUP\_GRAPH\_H}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include "{}structs.h"{}}}
+\DoxyCodeLine{5 }
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include <vector>}}
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include <list>}}
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include <climits>}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#include <iosfwd>}}
+\DoxyCodeLine{10 \textcolor{preprocessor}{\#include <iostream>}}
+\DoxyCodeLine{11 \textcolor{keyword}{using namespace }std;}
+\DoxyCodeLine{12 }
+\DoxyCodeLine{13 }
+\DoxyCodeLine{14 \textcolor{preprocessor}{\#define INF (INT\_MAX/2)}}
+\DoxyCodeLine{15 }
+\DoxyCodeLine{16 \textcolor{keyword}{class }\mbox{\hyperlink{class_graph}{Graph}} \{}
+\DoxyCodeLine{17 }
+\DoxyCodeLine{18 \textcolor{keyword}{protected}:}
+\DoxyCodeLine{19     \textcolor{keywordtype}{int} n=0;}
+\DoxyCodeLine{20     \textcolor{keywordtype}{bool} hasDir=\textcolor{keyword}{true};}
+\DoxyCodeLine{21     vector<Node> nodes = \{\{\}\};}
+\DoxyCodeLine{22 }
+\DoxyCodeLine{23 \textcolor{keyword}{public}:}
+\DoxyCodeLine{28     \mbox{\hyperlink{class_graph_a486eb4d1172ecda85e6c9c9709befdbe}{Graph}}(\textcolor{keywordtype}{bool} hasDir = \textcolor{keyword}{true});}
+\DoxyCodeLine{29 }
+\DoxyCodeLine{34     vector<Node> \&\mbox{\hyperlink{class_graph_a87bfe4e83e37b8763298ca4f4bf17fe6}{getNodes}}();}
+\DoxyCodeLine{40     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_graph_af47ad71788b63e6da829068e464e59cb}{addNode}}(\textcolor{keywordtype}{int} node);}
+\DoxyCodeLine{45     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_graph_ade2bc4145085d1c3380c5c8a09f8dd33}{removeNode}}(\textcolor{keywordtype}{int} node);}
+\DoxyCodeLine{53     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_graph_acf8b0cca825dfad43d1703e017a7706a}{addEdge}}(\textcolor{keywordtype}{int} origin, \textcolor{keywordtype}{int} dest, \textcolor{keywordtype}{int} capacity, \textcolor{keywordtype}{int} duration);}
+\DoxyCodeLine{60     \textcolor{keyword}{friend} std::ostream\& \mbox{\hyperlink{class_graph_a324c04aaf123361bf99abdc5d2860e3a}{operator<<}}(std::ostream\& os, \textcolor{keyword}{const} \mbox{\hyperlink{class_graph}{Graph}} \&o);}
+\DoxyCodeLine{61 \};}
+\DoxyCodeLine{62 }
+\DoxyCodeLine{63 \textcolor{preprocessor}{\#endif }\textcolor{comment}{//DA\_PROJ2\_FEUP\_GRAPH\_H}}
+
+\end{DoxyCode}

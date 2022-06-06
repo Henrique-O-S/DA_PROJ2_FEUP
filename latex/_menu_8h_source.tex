@@ -1,0 +1,104 @@
+\hypertarget{_menu_8h_source}{}\doxysection{Menu.\+h}
+\label{_menu_8h_source}\index{codigo/include/Menu.h@{codigo/include/Menu.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef DA\_PROJ2\_FEUP\_MENU\_H}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define DA\_PROJ2\_FEUP\_MENU\_H}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{preprocessor}{\#include <string>}}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include "{}App.h"{}}}
+\DoxyCodeLine{6 }
+\DoxyCodeLine{7 \textcolor{keyword}{class }\mbox{\hyperlink{class_menu}{Menu}} \{}
+\DoxyCodeLine{8 \textcolor{keyword}{protected}:}
+\DoxyCodeLine{9     \mbox{\hyperlink{class_app}{App}} \&app;}
+\DoxyCodeLine{10 \textcolor{keyword}{public}:}
+\DoxyCodeLine{15     \textcolor{keyword}{explicit} \mbox{\hyperlink{class_menu_aabbf80101737306387cfe702f3dd36cd}{Menu}}(\mbox{\hyperlink{class_app}{App}} \&app);}
+\DoxyCodeLine{19     \textcolor{keyword}{virtual} \mbox{\hyperlink{class_menu_a831387f51358cfb88cd018e1777bc980}{\string~Menu}}();}
+\DoxyCodeLine{23     \textcolor{keyword}{virtual} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_menu_a94b92b5dc7993422a01de6f37848551e}{display}}()=0;}
+\DoxyCodeLine{28     \textcolor{keyword}{virtual} \mbox{\hyperlink{class_menu}{Menu}} *\mbox{\hyperlink{class_menu_a88f07c80050dafb1c4bb05891c7830cc}{nextMenu}}()=0;}
+\DoxyCodeLine{33     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_menu_a6e291e64d873000550cee5c9c8125c63}{readInt}}();}
+\DoxyCodeLine{38     std::string \mbox{\hyperlink{class_menu_a99c6220a96985db06f83dff14495ea9d}{readStr}}();}
+\DoxyCodeLine{42     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_menu_a4b72967237b116b96d894038e66ff290}{waitForKey}}();}
+\DoxyCodeLine{47     \mbox{\hyperlink{class_menu}{Menu}} *\mbox{\hyperlink{class_menu_a346361534eaaddd48af187579ca296c2}{invalidInput}}();}
+\DoxyCodeLine{48 \};}
+\DoxyCodeLine{49 }
+\DoxyCodeLine{50 \textcolor{keyword}{class }\mbox{\hyperlink{class_main_menu}{MainMenu}}: \textcolor{keyword}{public} \mbox{\hyperlink{class_menu}{Menu}}\{}
+\DoxyCodeLine{51 \textcolor{keyword}{public}:}
+\DoxyCodeLine{52     \textcolor{keyword}{explicit} \mbox{\hyperlink{class_main_menu}{MainMenu}}(\mbox{\hyperlink{class_app}{App}} \&app);}
+\DoxyCodeLine{53     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_main_menu_a1b531d98ccd8f877ea0f1c5e1544e0fa}{display}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{54     \mbox{\hyperlink{class_menu}{Menu}} *\mbox{\hyperlink{class_main_menu_a732a021e2136269b2d04983f9acdb46e}{nextMenu}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{55 \};}
+\DoxyCodeLine{56 }
+\DoxyCodeLine{57 \textcolor{keyword}{class }\mbox{\hyperlink{class_options_menu}{OptionsMenu}}: \textcolor{keyword}{public} \mbox{\hyperlink{class_menu}{Menu}}\{}
+\DoxyCodeLine{58 \textcolor{keyword}{public}:}
+\DoxyCodeLine{59     \textcolor{keyword}{explicit} \mbox{\hyperlink{class_options_menu}{OptionsMenu}}(\mbox{\hyperlink{class_app}{App}} \&app);}
+\DoxyCodeLine{60     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_options_menu_aee81ed88fe487bab3b8ffaed56fe57d9}{display}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{61     \mbox{\hyperlink{class_menu}{Menu}} *\mbox{\hyperlink{class_options_menu_a8f2c1da498c224b01b08282ddd30055e}{nextMenu}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{62 \};}
+\DoxyCodeLine{63 }
+\DoxyCodeLine{64 \textcolor{keyword}{class }\mbox{\hyperlink{class_scenery1}{Scenery1}}: \textcolor{keyword}{public} \mbox{\hyperlink{class_menu}{Menu}}\{}
+\DoxyCodeLine{65 \textcolor{keyword}{public}:}
+\DoxyCodeLine{66     \textcolor{keyword}{explicit} \mbox{\hyperlink{class_scenery1}{Scenery1}}(\mbox{\hyperlink{class_app}{App}} \&app);}
+\DoxyCodeLine{67     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_scenery1_a10d6c27a58d790a885dcbb71eb37ba0b}{display}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{68     \mbox{\hyperlink{class_menu}{Menu}} *\mbox{\hyperlink{class_scenery1_a0d9005f905f4e19e8f6e8578e932d04a}{nextMenu}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{69 \};}
+\DoxyCodeLine{70 }
+\DoxyCodeLine{71 \textcolor{keyword}{class }\mbox{\hyperlink{class_func1__1}{Func1\_1}}: \textcolor{keyword}{public} \mbox{\hyperlink{class_menu}{Menu}}\{}
+\DoxyCodeLine{72 \textcolor{keyword}{public}:}
+\DoxyCodeLine{73     \textcolor{keyword}{explicit} \mbox{\hyperlink{class_func1__1}{Func1\_1}}(\mbox{\hyperlink{class_app}{App}} \&app);}
+\DoxyCodeLine{74     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_func1__1_a53b7514df37fe85bd7c499dce0893967}{display}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{75     \mbox{\hyperlink{class_menu}{Menu}} *\mbox{\hyperlink{class_func1__1_a93fc50dda1b71fb0b15f12de19eaa260}{nextMenu}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{76 \};}
+\DoxyCodeLine{77 }
+\DoxyCodeLine{78 \textcolor{keyword}{class }\mbox{\hyperlink{class_func1__2}{Func1\_2}}: \textcolor{keyword}{public} \mbox{\hyperlink{class_menu}{Menu}}\{}
+\DoxyCodeLine{79 \textcolor{keyword}{public}:}
+\DoxyCodeLine{80     \textcolor{keyword}{explicit} \mbox{\hyperlink{class_func1__2}{Func1\_2}}(\mbox{\hyperlink{class_app}{App}} \&app);}
+\DoxyCodeLine{81     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_func1__2_ae7b079a9881337dafcb49d6a20d9b4a5}{display}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{82     \mbox{\hyperlink{class_menu}{Menu}} *\mbox{\hyperlink{class_func1__2_a9bddc267e75302e116988921aa9d0e3a}{nextMenu}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{83 \};}
+\DoxyCodeLine{84 }
+\DoxyCodeLine{85 \textcolor{keyword}{class }\mbox{\hyperlink{class_scenery2}{Scenery2}}: \textcolor{keyword}{public} \mbox{\hyperlink{class_menu}{Menu}}\{}
+\DoxyCodeLine{86 \textcolor{keyword}{public}:}
+\DoxyCodeLine{87     \textcolor{keyword}{explicit} \mbox{\hyperlink{class_scenery2}{Scenery2}}(\mbox{\hyperlink{class_app}{App}} \&app);}
+\DoxyCodeLine{88     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_scenery2_a37131c574f00554f37b65aa19b82db13}{display}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{89     \mbox{\hyperlink{class_menu}{Menu}} *\mbox{\hyperlink{class_scenery2_a9fdaa1bf3b8f88050edc33ea7c04eb8c}{nextMenu}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{90 \};}
+\DoxyCodeLine{91 }
+\DoxyCodeLine{92 \textcolor{keyword}{class }\mbox{\hyperlink{class_func2__1}{Func2\_1}}: \textcolor{keyword}{public} \mbox{\hyperlink{class_menu}{Menu}}\{}
+\DoxyCodeLine{93 \textcolor{keyword}{public}:}
+\DoxyCodeLine{94     \textcolor{keyword}{explicit} \mbox{\hyperlink{class_func2__1}{Func2\_1}}(\mbox{\hyperlink{class_app}{App}} \&app);}
+\DoxyCodeLine{95     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_func2__1_ad47de9f4face8aeb6dc5e0ad0fff5b6a}{display}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{96     \mbox{\hyperlink{class_menu}{Menu}} *\mbox{\hyperlink{class_func2__1_ab765dbfbb8ac39b1220e05a61e71568a}{nextMenu}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{97 \};}
+\DoxyCodeLine{98 }
+\DoxyCodeLine{99 \textcolor{keyword}{class }\mbox{\hyperlink{class_func2__2}{Func2\_2}}: \textcolor{keyword}{public} \mbox{\hyperlink{class_menu}{Menu}}\{}
+\DoxyCodeLine{100 \textcolor{keyword}{public}:}
+\DoxyCodeLine{101     \textcolor{keyword}{explicit} \mbox{\hyperlink{class_func2__2}{Func2\_2}}(\mbox{\hyperlink{class_app}{App}} \&app);}
+\DoxyCodeLine{102     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_func2__2_a3f186ed755d50bf7142da1e57dd712d7}{display}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{103     \mbox{\hyperlink{class_menu}{Menu}} *\mbox{\hyperlink{class_func2__2_ab945b4ed1647187283e7aa5505190c0a}{nextMenu}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{104 \};}
+\DoxyCodeLine{105 }
+\DoxyCodeLine{106 \textcolor{keyword}{class }\mbox{\hyperlink{class_func2__3}{Func2\_3}}: \textcolor{keyword}{public} \mbox{\hyperlink{class_menu}{Menu}}\{}
+\DoxyCodeLine{107 \textcolor{keyword}{public}:}
+\DoxyCodeLine{108     \textcolor{keyword}{explicit} \mbox{\hyperlink{class_func2__3}{Func2\_3}}(\mbox{\hyperlink{class_app}{App}} \&app);}
+\DoxyCodeLine{109     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_func2__3_af45a6a26f7df421c83f721d3032d0650}{display}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{110     \mbox{\hyperlink{class_menu}{Menu}} *\mbox{\hyperlink{class_func2__3_aed212a6982b63defba5f6836fb9d6e2f}{nextMenu}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{111 \};}
+\DoxyCodeLine{112 }
+\DoxyCodeLine{113 \textcolor{keyword}{class }\mbox{\hyperlink{class_func2__4}{Func2\_4}}: \textcolor{keyword}{public} \mbox{\hyperlink{class_menu}{Menu}}\{}
+\DoxyCodeLine{114 \textcolor{keyword}{public}:}
+\DoxyCodeLine{115     \textcolor{keyword}{explicit} \mbox{\hyperlink{class_func2__4}{Func2\_4}}(\mbox{\hyperlink{class_app}{App}} \&app);}
+\DoxyCodeLine{116     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_func2__4_a1ef29de39666a198b3b43c0342b1cdba}{display}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{117     \mbox{\hyperlink{class_menu}{Menu}} *\mbox{\hyperlink{class_func2__4_a7d640557a788ddffe364c6be4b876575}{nextMenu}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{118 \};}
+\DoxyCodeLine{119 }
+\DoxyCodeLine{120 \textcolor{keyword}{class }\mbox{\hyperlink{class_func2__5}{Func2\_5}}: \textcolor{keyword}{public} \mbox{\hyperlink{class_menu}{Menu}}\{}
+\DoxyCodeLine{121 \textcolor{keyword}{public}:}
+\DoxyCodeLine{122     \textcolor{keyword}{explicit} \mbox{\hyperlink{class_func2__5}{Func2\_5}}(\mbox{\hyperlink{class_app}{App}} \&app);}
+\DoxyCodeLine{123     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_func2__5_abcd255182367c057fec9e9912694be7e}{display}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{124     \mbox{\hyperlink{class_menu}{Menu}} *\mbox{\hyperlink{class_func2__5_ae004f1526b3c021142424522a1f149eb}{nextMenu}}() \textcolor{keyword}{override};}
+\DoxyCodeLine{125 \};}
+\DoxyCodeLine{126 }
+\DoxyCodeLine{127 \textcolor{preprocessor}{\#endif }\textcolor{comment}{//DA\_PROJ2\_FEUP\_MENU\_H}}
+
+\end{DoxyCode}

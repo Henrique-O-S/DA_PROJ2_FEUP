@@ -1,0 +1,125 @@
+\hypertarget{class_graph}{}\doxysection{Graph Class Reference}
+\label{class_graph}\index{Graph@{Graph}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_graph_a486eb4d1172ecda85e6c9c9709befdbe}{Graph}} (bool has\+Dir=true)
+\item 
+vector$<$ \mbox{\hyperlink{struct_node}{Node}} $>$ \& \mbox{\hyperlink{class_graph_a87bfe4e83e37b8763298ca4f4bf17fe6}{get\+Nodes}} ()
+\item 
+int \mbox{\hyperlink{class_graph_af47ad71788b63e6da829068e464e59cb}{add\+Node}} (int node)
+\item 
+void \mbox{\hyperlink{class_graph_ade2bc4145085d1c3380c5c8a09f8dd33}{remove\+Node}} (int node)
+\item 
+void \mbox{\hyperlink{class_graph_acf8b0cca825dfad43d1703e017a7706a}{add\+Edge}} (int origin, int dest, int capacity, int duration)
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_graph_a81a76a428e630453ef019a15b9092967}\label{class_graph_a81a76a428e630453ef019a15b9092967}} 
+int {\bfseries n} =0
+\item 
+\mbox{\Hypertarget{class_graph_a60baa846929049c84b7e50ffb5f401e8}\label{class_graph_a60baa846929049c84b7e50ffb5f401e8}} 
+bool {\bfseries has\+Dir} =true
+\item 
+\mbox{\Hypertarget{class_graph_a71b5e16eb9e0670fea3ecee3526abb41}\label{class_graph_a71b5e16eb9e0670fea3ecee3526abb41}} 
+vector$<$ \mbox{\hyperlink{struct_node}{Node}} $>$ {\bfseries nodes} = \{\{\}\}
+\end{DoxyCompactItemize}
+\doxysubsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+std\+::ostream \& \mbox{\hyperlink{class_graph_a324c04aaf123361bf99abdc5d2860e3a}{operator$<$$<$}} (std\+::ostream \&os, const \mbox{\hyperlink{class_graph}{Graph}} \&o)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_graph_a486eb4d1172ecda85e6c9c9709befdbe}\label{class_graph_a486eb4d1172ecda85e6c9c9709befdbe}} 
+\index{Graph@{Graph}!Graph@{Graph}}
+\index{Graph@{Graph}!Graph@{Graph}}
+\doxysubsubsection{\texorpdfstring{Graph()}{Graph()}}
+{\footnotesize\ttfamily Graph\+::\+Graph (\begin{DoxyParamCaption}\item[{bool}]{has\+Dir = {\ttfamily true} }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{class_graph}{Graph}} class default constructor 
+\begin{DoxyParams}{Parameters}
+{\em has\+Dir} & true if graph is directed or false otherwise \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_graph_acf8b0cca825dfad43d1703e017a7706a}\label{class_graph_acf8b0cca825dfad43d1703e017a7706a}} 
+\index{Graph@{Graph}!addEdge@{addEdge}}
+\index{addEdge@{addEdge}!Graph@{Graph}}
+\doxysubsubsection{\texorpdfstring{addEdge()}{addEdge()}}
+{\footnotesize\ttfamily void Graph\+::add\+Edge (\begin{DoxyParamCaption}\item[{int}]{origin,  }\item[{int}]{dest,  }\item[{int}]{capacity,  }\item[{int}]{duration }\end{DoxyParamCaption})}
+
+Adds an edge to the src node 
+\begin{DoxyParams}{Parameters}
+{\em origin} & integer origin node index in the nodes vector \\
+\hline
+{\em dest} & integer destination node index in the nodes vector \\
+\hline
+{\em capacity} & weight of the edge \\
+\hline
+{\em duration} & time it takes to get from origin to destination \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_graph_af47ad71788b63e6da829068e464e59cb}\label{class_graph_af47ad71788b63e6da829068e464e59cb}} 
+\index{Graph@{Graph}!addNode@{addNode}}
+\index{addNode@{addNode}!Graph@{Graph}}
+\doxysubsubsection{\texorpdfstring{addNode()}{addNode()}}
+{\footnotesize\ttfamily int Graph\+::add\+Node (\begin{DoxyParamCaption}\item[{int}]{node }\end{DoxyParamCaption})}
+
+Adds a node to the graph 
+\begin{DoxyParams}{Parameters}
+{\em node} & \mbox{\hyperlink{struct_node}{Node}} index \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+index of the position where the node was added in the nodes vector 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_graph_a87bfe4e83e37b8763298ca4f4bf17fe6}\label{class_graph_a87bfe4e83e37b8763298ca4f4bf17fe6}} 
+\index{Graph@{Graph}!getNodes@{getNodes}}
+\index{getNodes@{getNodes}!Graph@{Graph}}
+\doxysubsubsection{\texorpdfstring{getNodes()}{getNodes()}}
+{\footnotesize\ttfamily vector$<$ \mbox{\hyperlink{struct_node}{Node}} $>$ \& Graph\+::get\+Nodes (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Gets a reference to get nodes vector of the graph \begin{DoxyReturn}{Returns}
+node vector passed by reference 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_graph_ade2bc4145085d1c3380c5c8a09f8dd33}\label{class_graph_ade2bc4145085d1c3380c5c8a09f8dd33}} 
+\index{Graph@{Graph}!removeNode@{removeNode}}
+\index{removeNode@{removeNode}!Graph@{Graph}}
+\doxysubsubsection{\texorpdfstring{removeNode()}{removeNode()}}
+{\footnotesize\ttfamily void Graph\+::remove\+Node (\begin{DoxyParamCaption}\item[{int}]{node }\end{DoxyParamCaption})}
+
+Removes the node correspondent to the integer node identifier passed in the argument 
+\begin{DoxyParams}{Parameters}
+{\em node} & integer node identifier in the nodes vector \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Friends And Related Function Documentation}
+\mbox{\Hypertarget{class_graph_a324c04aaf123361bf99abdc5d2860e3a}\label{class_graph_a324c04aaf123361bf99abdc5d2860e3a}} 
+\index{Graph@{Graph}!operator$<$$<$@{operator$<$$<$}}
+\index{operator$<$$<$@{operator$<$$<$}!Graph@{Graph}}
+\doxysubsubsection{\texorpdfstring{operator$<$$<$}{operator<<}}
+{\footnotesize\ttfamily std\+::ostream \& operator$<$$<$ (\begin{DoxyParamCaption}\item[{std\+::ostream \&}]{os,  }\item[{const \mbox{\hyperlink{class_graph}{Graph}} \&}]{o }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [friend]}}
+
+Operator to print Courier object in the correct format 
+\begin{DoxyParams}{Parameters}
+{\em os} & stream where Courier will be printed \\
+\hline
+{\em p} & Courier object passed by reference \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+ostream with Courier printed 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+codigo/include/Graph.\+h\item 
+codigo/src/Graph.\+cpp\end{DoxyCompactItemize}

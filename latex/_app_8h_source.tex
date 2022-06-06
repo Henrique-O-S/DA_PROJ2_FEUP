@@ -1,0 +1,65 @@
+\hypertarget{_app_8h_source}{}\doxysection{App.\+h}
+\label{_app_8h_source}\index{codigo/include/App.h@{codigo/include/App.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef DA\_PROJ2\_FEUP\_APP\_H}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define DA\_PROJ2\_FEUP\_APP\_H}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 }
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include <string>}}
+\DoxyCodeLine{6 \textcolor{preprocessor}{\#include <map>}}
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#include "{}Vehicle.h"{}}}
+\DoxyCodeLine{8 \textcolor{preprocessor}{\#include "{}FileReader.h"{}}}
+\DoxyCodeLine{9 \textcolor{preprocessor}{\#include "{}Graph.h"{}}}
+\DoxyCodeLine{10 }
+\DoxyCodeLine{15 \textcolor{keyword}{class }\mbox{\hyperlink{class_app}{App}} \{}
+\DoxyCodeLine{16 \textcolor{keyword}{private}:}
+\DoxyCodeLine{17     \textcolor{keywordtype}{string} filepath = \textcolor{stringliteral}{"{}../input/"{}};}
+\DoxyCodeLine{18     \mbox{\hyperlink{class_file_reader}{FileReader}} fileReader;}
+\DoxyCodeLine{19     vector<Vehicle> vehicles;}
+\DoxyCodeLine{20     \mbox{\hyperlink{class_graph}{Graph}} graph = \mbox{\hyperlink{class_graph}{Graph}}(\textcolor{keyword}{true});}
+\DoxyCodeLine{21     \mbox{\hyperlink{class_graph}{Graph}} auxGraph; \textcolor{comment}{// for 2.4/2.5}}
+\DoxyCodeLine{22     vector<pair<vector<int>, \textcolor{keywordtype}{int}>> pathsTaken; \textcolor{comment}{// for 1.1/1.2}}
+\DoxyCodeLine{23     pair<map<pair<int,int>, \textcolor{keywordtype}{int}>, \textcolor{keywordtype}{int}> pathsMap; \textcolor{comment}{// for 2.1-\/2.5}}
+\DoxyCodeLine{24     vector<vector<pair<int,int>>> flowGraph; \textcolor{comment}{// for 2.1-\/2.5}}
+\DoxyCodeLine{25     vector<int> parent; \textcolor{comment}{// for 2.1-\/2.5}}
+\DoxyCodeLine{26     tuple<int, int, int> lastPathInfo = make\_tuple(0,0,0); \textcolor{comment}{// for 2.1-\/2.5}}
+\DoxyCodeLine{27 }
+\DoxyCodeLine{28 \textcolor{keyword}{public}:}
+\DoxyCodeLine{29 }
+\DoxyCodeLine{33     \mbox{\hyperlink{class_app_acb8cbf3e285b91d0170ffe87df5989c5}{App}}();}
+\DoxyCodeLine{34 }
+\DoxyCodeLine{38     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_app_aeb351b146ad732efe17d35734390cae7}{loadData}}();}
+\DoxyCodeLine{39 }
+\DoxyCodeLine{43     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_app_a173d38679a7473d8c28f4b02b7314f64}{printGraph}}();}
+\DoxyCodeLine{44 }
+\DoxyCodeLine{49     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_app_abe10829f6219d673d887e0b6c6a2da42}{printPaths}}(\textcolor{keywordtype}{int} scenario);}
+\DoxyCodeLine{50 }
+\DoxyCodeLine{54     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_app_aac6a1a9d6d73e765535600759e9363ce}{sortPaths}}();}
+\DoxyCodeLine{55 }
+\DoxyCodeLine{59     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_app_a12b53ba87ca042295c7c37d30007880b}{optimalPaths}}();}
+\DoxyCodeLine{60 }
+\DoxyCodeLine{67     pair<vector<int>, \textcolor{keywordtype}{int}> \mbox{\hyperlink{class_app_a694fdcd2b143f4068dc30d90a0aaeeb0}{scenery1\_1}}(\textcolor{keywordtype}{int} origin, \textcolor{keywordtype}{int} destination);}
+\DoxyCodeLine{68 }
+\DoxyCodeLine{74     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_app_a16da7544d9311ffa6212a82a91fff371}{edmondsKarp1\_2}}(\textcolor{keywordtype}{int} origin, \textcolor{keywordtype}{int} destination);}
+\DoxyCodeLine{75 }
+\DoxyCodeLine{82     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_app_aaff3b713f1f5a7ffeef6208962d92af5}{scenery1\_2}}(\textcolor{keywordtype}{int} origin, \textcolor{keywordtype}{int} destination);}
+\DoxyCodeLine{83 }
+\DoxyCodeLine{84 }
+\DoxyCodeLine{95      \mbox{\hyperlink{class_graph}{Graph}} \mbox{\hyperlink{class_app_a23b1c37f213afcebb4c5a41c8fda0532}{edmondsKarp}}(\textcolor{keywordtype}{int} origin, \textcolor{keywordtype}{int} destination, \textcolor{keywordtype}{int} size, pair<bool,bool> augmentation, \textcolor{keywordtype}{bool} findMax);}
+\DoxyCodeLine{96 }
+\DoxyCodeLine{104     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_app_afee870c22571e640a6a6b694ea3eaad9}{scenery2\_1}}(\textcolor{keywordtype}{int} origin, \textcolor{keywordtype}{int} destination, \textcolor{keywordtype}{int} size);}
+\DoxyCodeLine{105 }
+\DoxyCodeLine{111     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_app_af5fe9048c4da82a26cecb937d706dae0}{scenery2\_2}}(\textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{int} augmentation);}
+\DoxyCodeLine{112 }
+\DoxyCodeLine{119     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_app_a30f2db26656dc5e3eb43164bba8c0e86}{scenery2\_3}}(\textcolor{keywordtype}{int} origin, \textcolor{keywordtype}{int} destination);}
+\DoxyCodeLine{120 }
+\DoxyCodeLine{127     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_app_aabdf437062c5f973b950d36712d12516}{scenery2\_4}}(\textcolor{keywordtype}{int} origin, \textcolor{keywordtype}{int} destination, \textcolor{keywordtype}{int} size);}
+\DoxyCodeLine{128 }
+\DoxyCodeLine{135     \textcolor{keywordtype}{int} \mbox{\hyperlink{class_app_a86241e0e6f5b51bbceb2614c7485d831}{scenery2\_5}}(\textcolor{keywordtype}{int} origin, \textcolor{keywordtype}{int} destination, \textcolor{keywordtype}{int} size);}
+\DoxyCodeLine{136 }
+\DoxyCodeLine{137 \};}
+\DoxyCodeLine{138 }
+\DoxyCodeLine{139 \textcolor{preprocessor}{\#endif }\textcolor{comment}{//DA\_PROJ2\_FEUP\_APP\_H}}
+
+\end{DoxyCode}

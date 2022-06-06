@@ -1,0 +1,273 @@
+\hypertarget{class_app}{}\doxysection{App Class Reference}
+\label{class_app}\index{App@{App}}
+
+
+Contains the main functionalities of the program.  
+
+
+
+
+{\ttfamily \#include $<$App.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_app_acb8cbf3e285b91d0170ffe87df5989c5}\label{class_app_acb8cbf3e285b91d0170ffe87df5989c5}} 
+{\bfseries App} ()
+\begin{DoxyCompactList}\small\item\em Default Constructor. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_app_aeb351b146ad732efe17d35734390cae7}\label{class_app_aeb351b146ad732efe17d35734390cae7}} 
+void {\bfseries load\+Data} ()
+\begin{DoxyCompactList}\small\item\em Loads all storage files data into the program. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_app_a173d38679a7473d8c28f4b02b7314f64}\label{class_app_a173d38679a7473d8c28f4b02b7314f64}} 
+void {\bfseries print\+Graph} ()
+\begin{DoxyCompactList}\small\item\em Prints to the console the Nodes plus Edges contained in graph. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_app_abe10829f6219d673d887e0b6c6a2da42}{print\+Paths}} (int scenario)
+\begin{DoxyCompactList}\small\item\em Prints to the console the Paths taken. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_app_aac6a1a9d6d73e765535600759e9363ce}\label{class_app_aac6a1a9d6d73e765535600759e9363ce}} 
+void {\bfseries sort\+Paths} ()
+\begin{DoxyCompactList}\small\item\em Sorts the Paths vector. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_app_a12b53ba87ca042295c7c37d30007880b}\label{class_app_a12b53ba87ca042295c7c37d30007880b}} 
+void {\bfseries optimal\+Paths} ()
+\begin{DoxyCompactList}\small\item\em Removes non optimal paths from scenario 1.\+2. \end{DoxyCompactList}\item 
+pair$<$ vector$<$ int $>$, int $>$ \mbox{\hyperlink{class_app_a694fdcd2b143f4068dc30d90a0aaeeb0}{scenery1\+\_\+1}} (int origin, int destination)
+\begin{DoxyCompactList}\small\item\em Maximizes capacity of group trip from Origin to Destination. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_app_a16da7544d9311ffa6212a82a91fff371}{edmonds\+Karp1\+\_\+2}} (int origin, int destination)
+\begin{DoxyCompactList}\small\item\em Searches the paths that give the most flow from a origin and a destination point. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{class_app_aaff3b713f1f5a7ffeef6208962d92af5}{scenery1\+\_\+2}} (int origin, int destination)
+\begin{DoxyCompactList}\small\item\em Searches the paths from a origin and a destination point that maximize the capacity and minimizes the transhipment\textquotesingle{}s. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_graph}{Graph}} \mbox{\hyperlink{class_app_a23b1c37f213afcebb4c5a41c8fda0532}{edmonds\+Karp}} (int origin, int destination, int size, pair$<$ bool, bool $>$ augmentation, bool find\+Max)
+\begin{DoxyCompactList}\small\item\em Searches the paths that give the most flow from a origin and a destination point with a given size. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{class_app_afee870c22571e640a6a6b694ea3eaad9}{scenery2\+\_\+1}} (int origin, int destination, int size)
+\begin{DoxyCompactList}\small\item\em Finds the Paths for groups that may not stick together for a given trip with a given size. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{class_app_af5fe9048c4da82a26cecb937d706dae0}{scenery2\+\_\+2}} (unsigned int augmentation)
+\begin{DoxyCompactList}\small\item\em Augments the Paths for groups that may not stick together for a given trip with a given size. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{class_app_a30f2db26656dc5e3eb43164bba8c0e86}{scenery2\+\_\+3}} (int origin, int destination)
+\begin{DoxyCompactList}\small\item\em Finds the Paths for groups that may not stick together for a given trip with the biggest capacity. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{class_app_aabdf437062c5f973b950d36712d12516}{scenery2\+\_\+4}} (int origin, int destination, int size)
+\begin{DoxyCompactList}\small\item\em Finds the minimum time that, at least, one element of the group would reach the destination point. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{class_app_a86241e0e6f5b51bbceb2614c7485d831}{scenery2\+\_\+5}} (int origin, int destination, int size)
+\begin{DoxyCompactList}\small\item\em Finds the biggest difference of time that, at least, two element of the group would reach the destination point. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Contains the main functionalities of the program. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_app_a23b1c37f213afcebb4c5a41c8fda0532}\label{class_app_a23b1c37f213afcebb4c5a41c8fda0532}} 
+\index{App@{App}!edmondsKarp@{edmondsKarp}}
+\index{edmondsKarp@{edmondsKarp}!App@{App}}
+\doxysubsubsection{\texorpdfstring{edmondsKarp()}{edmondsKarp()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_graph}{Graph}} App\+::edmonds\+Karp (\begin{DoxyParamCaption}\item[{int}]{origin,  }\item[{int}]{destination,  }\item[{int}]{size,  }\item[{pair$<$ bool, bool $>$}]{augmentation,  }\item[{bool}]{find\+Max }\end{DoxyParamCaption})}
+
+
+
+Searches the paths that give the most flow from a origin and a destination point with a given size. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em origin} & Origin point \\
+\hline
+{\em destination} & Destination Point \\
+\hline
+{\em size} & Size of the Group \\
+\hline
+{\em augmentation} & first element, if true, does a augmentation of last path, if false, it can either do a augmentation if the Origin and Destination Points are the Same from previous path \\
+\hline
+{\em augmentation} & second element, if true, forces a non-\/augmentation \\
+\hline
+{\em find\+Max} & If true, the \char`\"{}\+Size\char`\"{} parameter doesn\textquotesingle{}t get evaluated \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A graph containing only the edges of the Trip 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_app_a16da7544d9311ffa6212a82a91fff371}\label{class_app_a16da7544d9311ffa6212a82a91fff371}} 
+\index{App@{App}!edmondsKarp1\_2@{edmondsKarp1\_2}}
+\index{edmondsKarp1\_2@{edmondsKarp1\_2}!App@{App}}
+\doxysubsubsection{\texorpdfstring{edmondsKarp1\_2()}{edmondsKarp1\_2()}}
+{\footnotesize\ttfamily void App\+::edmonds\+Karp1\+\_\+2 (\begin{DoxyParamCaption}\item[{int}]{origin,  }\item[{int}]{destination }\end{DoxyParamCaption})}
+
+
+
+Searches the paths that give the most flow from a origin and a destination point. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em origin} & Origin point \\
+\hline
+{\em destination} & Destination Point \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_app_abe10829f6219d673d887e0b6c6a2da42}\label{class_app_abe10829f6219d673d887e0b6c6a2da42}} 
+\index{App@{App}!printPaths@{printPaths}}
+\index{printPaths@{printPaths}!App@{App}}
+\doxysubsubsection{\texorpdfstring{printPaths()}{printPaths()}}
+{\footnotesize\ttfamily void App\+::print\+Paths (\begin{DoxyParamCaption}\item[{int}]{scenario }\end{DoxyParamCaption})}
+
+
+
+Prints to the console the Paths taken. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em scenario} & chooses between scenario 1 and 2 \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_app_a694fdcd2b143f4068dc30d90a0aaeeb0}\label{class_app_a694fdcd2b143f4068dc30d90a0aaeeb0}} 
+\index{App@{App}!scenery1\_1@{scenery1\_1}}
+\index{scenery1\_1@{scenery1\_1}!App@{App}}
+\doxysubsubsection{\texorpdfstring{scenery1\_1()}{scenery1\_1()}}
+{\footnotesize\ttfamily pair$<$ vector$<$ int $>$, int $>$ App\+::scenery1\+\_\+1 (\begin{DoxyParamCaption}\item[{int}]{origin,  }\item[{int}]{destination }\end{DoxyParamCaption})}
+
+
+
+Maximizes capacity of group trip from Origin to Destination. 
+
+1.\+1 DONE HERE
+
+
+\begin{DoxyParams}{Parameters}
+{\em origin} & Origin point \\
+\hline
+{\em destination} & Destination Point \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+vector containing the path and a integer referring to the capacity of the group 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_app_aaff3b713f1f5a7ffeef6208962d92af5}\label{class_app_aaff3b713f1f5a7ffeef6208962d92af5}} 
+\index{App@{App}!scenery1\_2@{scenery1\_2}}
+\index{scenery1\_2@{scenery1\_2}!App@{App}}
+\doxysubsubsection{\texorpdfstring{scenery1\_2()}{scenery1\_2()}}
+{\footnotesize\ttfamily int App\+::scenery1\+\_\+2 (\begin{DoxyParamCaption}\item[{int}]{origin,  }\item[{int}]{destination }\end{DoxyParamCaption})}
+
+
+
+Searches the paths from a origin and a destination point that maximize the capacity and minimizes the transhipment\textquotesingle{}s. 
+
+1.\+2 DONE HERE
+
+
+\begin{DoxyParams}{Parameters}
+{\em origin} & Origin point \\
+\hline
+{\em destination} & Destination Point \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 if succeeded and non 0 otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_app_afee870c22571e640a6a6b694ea3eaad9}\label{class_app_afee870c22571e640a6a6b694ea3eaad9}} 
+\index{App@{App}!scenery2\_1@{scenery2\_1}}
+\index{scenery2\_1@{scenery2\_1}!App@{App}}
+\doxysubsubsection{\texorpdfstring{scenery2\_1()}{scenery2\_1()}}
+{\footnotesize\ttfamily int App\+::scenery2\+\_\+1 (\begin{DoxyParamCaption}\item[{int}]{origin,  }\item[{int}]{destination,  }\item[{int}]{size }\end{DoxyParamCaption})}
+
+
+
+Finds the Paths for groups that may not stick together for a given trip with a given size. 
+
+2.\+1 DONE HERE
+
+
+\begin{DoxyParams}{Parameters}
+{\em origin} & Origin point \\
+\hline
+{\em destination} & Destination Point \\
+\hline
+{\em size} & Amount of people taking the trip \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 if succeeded, non 0 otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_app_af5fe9048c4da82a26cecb937d706dae0}\label{class_app_af5fe9048c4da82a26cecb937d706dae0}} 
+\index{App@{App}!scenery2\_2@{scenery2\_2}}
+\index{scenery2\_2@{scenery2\_2}!App@{App}}
+\doxysubsubsection{\texorpdfstring{scenery2\_2()}{scenery2\_2()}}
+{\footnotesize\ttfamily int App\+::scenery2\+\_\+2 (\begin{DoxyParamCaption}\item[{unsigned int}]{augmentation }\end{DoxyParamCaption})}
+
+
+
+Augments the Paths for groups that may not stick together for a given trip with a given size. 
+
+2.\+2 DONE HERE
+
+
+\begin{DoxyParams}{Parameters}
+{\em augmentation} & Number of people taking the trip \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+if succeeded, non 0 otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_app_a30f2db26656dc5e3eb43164bba8c0e86}\label{class_app_a30f2db26656dc5e3eb43164bba8c0e86}} 
+\index{App@{App}!scenery2\_3@{scenery2\_3}}
+\index{scenery2\_3@{scenery2\_3}!App@{App}}
+\doxysubsubsection{\texorpdfstring{scenery2\_3()}{scenery2\_3()}}
+{\footnotesize\ttfamily int App\+::scenery2\+\_\+3 (\begin{DoxyParamCaption}\item[{int}]{origin,  }\item[{int}]{destination }\end{DoxyParamCaption})}
+
+
+
+Finds the Paths for groups that may not stick together for a given trip with the biggest capacity. 
+
+2.\+3 DONE HERE
+
+
+\begin{DoxyParams}{Parameters}
+{\em origin} & Origin point \\
+\hline
+{\em destination} & Destination Point \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+if succeeded, non 0 otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_app_aabdf437062c5f973b950d36712d12516}\label{class_app_aabdf437062c5f973b950d36712d12516}} 
+\index{App@{App}!scenery2\_4@{scenery2\_4}}
+\index{scenery2\_4@{scenery2\_4}!App@{App}}
+\doxysubsubsection{\texorpdfstring{scenery2\_4()}{scenery2\_4()}}
+{\footnotesize\ttfamily int App\+::scenery2\+\_\+4 (\begin{DoxyParamCaption}\item[{int}]{origin,  }\item[{int}]{destination,  }\item[{int}]{size }\end{DoxyParamCaption})}
+
+
+
+Finds the minimum time that, at least, one element of the group would reach the destination point. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em origin} & Origin point \\
+\hline
+{\em destination} & Destination Point \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+if succeeded, non 0 otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_app_a86241e0e6f5b51bbceb2614c7485d831}\label{class_app_a86241e0e6f5b51bbceb2614c7485d831}} 
+\index{App@{App}!scenery2\_5@{scenery2\_5}}
+\index{scenery2\_5@{scenery2\_5}!App@{App}}
+\doxysubsubsection{\texorpdfstring{scenery2\_5()}{scenery2\_5()}}
+{\footnotesize\ttfamily int App\+::scenery2\+\_\+5 (\begin{DoxyParamCaption}\item[{int}]{origin,  }\item[{int}]{destination,  }\item[{int}]{size }\end{DoxyParamCaption})}
+
+
+
+Finds the biggest difference of time that, at least, two element of the group would reach the destination point. 
+
+2.\+5 DONE HERE
+
+
+\begin{DoxyParams}{Parameters}
+{\em origin} & Origin point \\
+\hline
+{\em destination} & Destination Point \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+if succeeded, non 0 otherwise 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+codigo/include/App.\+h\item 
+codigo/src/App.\+cpp\end{DoxyCompactItemize}

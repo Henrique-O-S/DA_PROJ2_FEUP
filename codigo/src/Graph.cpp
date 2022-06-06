@@ -33,7 +33,6 @@ void Graph::removeNode(int node) {
 void Graph::addEdge(int origin, int dest, int capacity, int duration) {
     if (origin<1 || origin>n || dest<1 || dest>n) return;
     nodes[origin].adj.push_back({origin, dest, capacity, duration});
-    nodes[dest].adjBack.push_back({dest, origin, capacity, duration});
 }
 
 ostream &operator<<(ostream &os, const Graph &g) {
@@ -51,19 +50,3 @@ ostream &operator<<(ostream &os, const Graph &g) {
     return os;
 }
 
-pair<int, int> Graph::tripCapacity(vector<int> path) {
-    int capacity = INT_MAX/2;
-    int size = 0;
-    vector<int>::iterator i, j;
-    for (i = path.begin(), j = path.begin()+1; j != path.end(); j++, i++) {
-        for(auto itr : nodes[*i].adj) {
-            if(itr.dest == *j) {
-                size++;
-                if(itr.capacity < capacity)
-                    capacity = itr.capacity;
-            }
-        }
-    }
-
-    return make_pair(capacity, size);
-}

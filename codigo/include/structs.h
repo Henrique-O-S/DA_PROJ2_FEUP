@@ -13,9 +13,8 @@ struct Edge {
 };
 
 struct Node {
-    /** The list of outgoing edges (to adjacent nodes) */
+    /** The vector of outgoing edges (to adjacent nodes) */
     std::vector<Edge> adj;
-    std::vector<Edge> adjBack;
     int id;
     int ES;
     int parent;

@@ -52,12 +52,6 @@ public:
      */
     void addEdge(int origin, int dest, int capacity, int duration);
     /**
-     * Finds trip capacity and size from origin to destination
-     * @param path vector of integers that contains the vertexes from the path
-     * @returns capacity weight of the trip and path size
-     */
-    pair<int, int> tripCapacity(vector<int> path);
-    /**
      * Operator to print Courier object in the correct format
      * @param os stream where Courier will be printed
      * @param p Courier object passed by reference

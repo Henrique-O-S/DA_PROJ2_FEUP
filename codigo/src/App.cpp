@@ -5,7 +5,7 @@
 
 App::App() = default;
 
-void App::loadData(){ ///TODO assert max that origin is > 0 and end is < n
+void App::loadData(){
     auto ret = fileReader.getVehicleFromFiles(filepath + "in01_b.txt");
     if(ret.second == -1) {
         cout << "Loading data failed. Make sure you inserted the correct text file";
@@ -46,7 +46,8 @@ void App::printPaths(int scenario) {
     switch (scenario) {
         case 1:
             if(pathsTaken.empty()) {
-                cout << "Path is empty. Make sure to run the "<<endl;
+                cout << "Path is empty."<<endl;
+                return;
             }
             for(const auto& path : pathsTaken) {
                 cout << "Capacity: "<< path.second << " Path size: " << path.first.size()<<" Path: (";
@@ -61,6 +62,10 @@ void App::printPaths(int scenario) {
             }
             break;
         case 2:
+            if(pathsMap.first.empty()) {
+                cout << "Path is empty."<<endl;
+                return;
+            }
             cout << "Origin \tDestination\tFlow" << endl;
             for(auto m : pathsMap.first) {
                 cout << m.first.first << "\t" << m.first.second << "\t\t" << m.second << endl;
@@ -174,9 +179,14 @@ pair<vector<int>, int> maxCapacityProblem(vector<Node> nodes, int src, int targe
 
 pair<vector<int>, int> App::scenery1_1(int origin, int destination) {
     pair<vector<int>, int> ret;
-    if(origin == 0 || destination == 0) return ret;
+    if(origin >= graph.getNodes().size() || destination >= graph.getNodes().size() || origin == 0 || destination == 0) {
+        cout << "Invalid Trip! Select a origin and destination between: 1 - " << graph.getNodes().size()-1 << endl;
+        return ret;
+    }
     auto aux = maxCapacityProblem(graph.getNodes(), origin, destination);
-    if(aux.second == INT_MIN/2) return ret;
+    if(aux.second == INT_MIN/2) {
+        return ret;
+    }
     return aux;
 }
 
@@ -269,13 +279,17 @@ void App::edmondsKarp1_2(int origin, int destination) {
 /// 1.2 DONE HERE
 
 int App::scenery1_2(int origin, int destination) {
+    if(origin >= graph.getNodes().size() || destination >= graph.getNodes().size() || origin <= 0 || destination <= 0) {
+        cout << "Invalid Trip! Select a origin and destination between: 1 - " << graph.getNodes().size()-1 << endl;
+        return 1;
+    }
     pathsTaken.clear();
     vector<vector<int>> paths;
     edmondsKarp1_2(origin, destination);
-    if(origin <= 0 || origin > graph.getNodes().size() ||destination <= 0 || destination > graph.getNodes().size()) {
-        return 1;
-    }
     auto aux = maxCapacityProblem(graph.getNodes(), origin, destination);
+    if(aux.second == INT_MIN/2) {
+        return 2;
+    }
     pathsTaken.emplace_back(aux);
     sortPaths();
     optimalPaths();
@@ -365,8 +379,15 @@ Graph App::edmondsKarp(int origin, int destination, int size, pair<bool,bool> au
 /// 2.1 DONE HERE
 
 int App::scenery2_1(int origin, int destination, int size){
-    if(origin >= graph.getNodes().size() || destination >= graph.getNodes().size()) return 1;
+    if(origin >= graph.getNodes().size() || destination >= graph.getNodes().size()) {
+        cout << "Invalid Trip! Select a origin and destination between: 1 - " << graph.getNodes().size()-1 << endl;
+        return 1;
+    }
     edmondsKarp(origin, destination, size, make_pair(false,false), false);
+    if(pathsMap.second == 0) {
+        cout << "The path isn't possible" << endl;
+        return 2;
+    }
     if(pathsMap.second < size) {
         cout << "The size of the group exceeds the maximum possible capacity for the trip ["<<origin<<"] - ["
         << destination <<"] which is: "<<  pathsMap.second  << endl;
@@ -374,7 +395,6 @@ int App::scenery2_1(int origin, int destination, int size){
         cout << "The path flow for the trip is:" << endl;
         printPaths(2);
     }
-    /// TODO verificar todos os caminhos possiveis e construir a partir daí
     return 0;
 }
 
@@ -383,8 +403,9 @@ int App::scenery2_1(int origin, int destination, int size){
 int App::scenery2_2(unsigned augmentation){
     int origin = get<0>(lastPathInfo), destination = get<1>(lastPathInfo);
     unsigned size = get<2>(lastPathInfo);
-    if(origin == 0 || destination == 0) {
-        return 1;
+    if(origin == 0 || destination == 0 || pathsMap.second == 0) {
+        cout << "You must give a valid Trip before augmenting it!" << endl;
+        return 2;
     }
     if((size+augmentation) <= pathsMap.second) {
         lastPathInfo = make_tuple(origin, destination, size + augmentation);
@@ -393,11 +414,11 @@ int App::scenery2_2(unsigned augmentation){
         return 0;
     }
     edmondsKarp(origin, destination, (size + augmentation), make_pair(false,true), false);
-    if(pathsMap.second < get<2>(lastPathInfo)) {
+    if(pathsMap.second < size + augmentation) {
         cout << "The size of the group exceeds the maximum possible capacity for the trip ["<<origin
-                <<"] - [" << destination <<"] which is: "<<  pathsMap.second << " < " << get<2>(lastPathInfo) << endl;
+                <<"] - [" << destination <<"] which is: "<<  pathsMap.second << " < " << size + augmentation << endl;
 
-        lastPathInfo = make_tuple(origin, destination, size);
+        lastPathInfo = make_tuple(origin, destination, pathsMap.second);
     } else {
         cout << "The path flow for the trip is:" << endl;
         printPaths(2);
@@ -409,8 +430,15 @@ int App::scenery2_2(unsigned augmentation){
 /// 2.3 DONE HERE
 
 int App::scenery2_3(int origin, int destination) {
-    if(origin >= graph.getNodes().size() || destination >= graph.getNodes().size()) return 1;
+    if(origin >= graph.getNodes().size() || destination >= graph.getNodes().size()) {
+        cout << "Invalid Trip! Select a origin and destination between: 1 - " << graph.getNodes().size()-1 << endl;
+        return 1;
+    }
     edmondsKarp(origin, destination, -1, make_pair(false,false), true);
+    if(pathsMap.second == 0) {
+        cout << "The path isn't possible" << endl;
+        return 2;
+    }
     cout << "The maximum capacity for the trip ["<<origin<<"] - [" << destination <<"] is: "
          <<  pathsMap.second << endl;
 
@@ -458,8 +486,15 @@ int earliestStart(vector<Node> &nodes) {
 
 int App::scenery2_4(int origin, int destination, int size) {
 
-    if(origin >= graph.getNodes().size() || destination >= graph.getNodes().size()) return 1;
+    if(origin >= graph.getNodes().size() || destination >= graph.getNodes().size()) {
+        cout << "Invalid Trip! Select a origin and destination between: 1 - " << graph.getNodes().size()-1 << endl;
+        return 1;
+    }
     edmondsKarp(origin, destination, size, make_pair(false,true), false);
+    if(pathsMap.second == 0) {
+        cout << "The path isn't possible" << endl;
+        return 2;
+    }
 
     return earliestStart(auxGraph.getNodes());
 }
@@ -467,12 +502,15 @@ int App::scenery2_4(int origin, int destination, int size) {
 /// 2.5 DONE HERE
 
 int App::scenery2_5(int origin, int destination, int size) {
-    if(origin >= graph.getNodes().size() || destination >= graph.getNodes().size()) return 1;
+    if(origin >= graph.getNodes().size() || destination >= graph.getNodes().size()) {
+        cout << "Invalid Trip! Select a origin and destination between: 1 - " << graph.getNodes().size()-1 << endl;
+        return 1;
+    }
 
     edmondsKarp(origin, destination, size, make_pair(false,true), false);
     if(pathsMap.second == 0) {
         cout << "The path isn't possible" << endl;
-        return 1;
+        return 2;
     }
     vector<Node> &nodes = auxGraph.getNodes();
     if(!earliestStart(nodes)) return 1;
@@ -496,7 +534,7 @@ int App::scenery2_5(int origin, int destination, int size) {
         }
     }
     if(maxWait == 0) {
-        cout << "The group will arrive at destination at the same time" << endl;
+        cout << "And would be arriving at the same time" << endl;
         return 0;
     }
     cout << "The maximum time a element(s) of the group would have to wait is: " << maxWait <<"h"<<endl;

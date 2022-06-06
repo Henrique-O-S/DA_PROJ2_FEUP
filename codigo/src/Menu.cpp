@@ -316,7 +316,9 @@ Menu *Func2_1::nextMenu() {
         return this;
     }
 
-    auto ret = app.scenery2_1(ori, dest, cpcity);
+    if(app.scenery2_1(ori, dest, cpcity) == 1)
+        return this;
+
     cout << endl;
     return nullptr;
 }
@@ -344,7 +346,8 @@ Menu *Func2_2::nextMenu() {
     cap = stoi(capacity);
     if(cap <= 0)
         return invalidInput();
-    auto ret = app.scenery2_2(cap);
+    if(app.scenery2_2(cap) == 1)
+        return this;
 
     return nullptr;
 }
@@ -379,7 +382,9 @@ Menu *Func2_3::nextMenu() {
         return this;
     }
 
-    int ret = app.scenery2_3(ori, dest);
+    if(app.scenery2_3(ori, dest) == 1)
+        return this;
+
     cout << endl;
     return nullptr;
 }
@@ -418,7 +423,8 @@ Menu *Func2_4::nextMenu() {
         return this;
     }
     cout << endl;
-    auto ret = app.scenery2_4(ori, dest, cpcity);
+    if(app.scenery2_4(ori, dest, cpcity) == 1)
+        return this;
     cout << endl;
     return nullptr;
 }
@@ -457,7 +463,8 @@ Menu *Func2_5::nextMenu() {
         return this;
     }
     cout << endl;
-    auto ret = app.scenery2_5(ori, dest, cpcity);
+    if(app.scenery2_5(ori, dest, cpcity) == 1)
+        return this;
     cout << endl;
     return nullptr;
 }
